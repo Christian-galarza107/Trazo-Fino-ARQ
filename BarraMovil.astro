@@ -1,0 +1,24 @@
+---
+/** Barra comercial fija en móvil: Cotizar + WhatsApp. Aparece después de la portada. */
+import Icono from './Icono.astro';
+import { textos, url, whatsapp } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+interface Props { lang: Idioma; mensaje: string; ancla?: string }
+const { lang, mensaje, ancla } = Astro.props;
+const t = textos(lang);
+const wa = whatsapp(mensaje);
+---
+<div class="barra-movil" data-barra-movil style={wa ? undefined : 'grid-template-columns:1fr'}>
+  <a href={ancla ?? url(lang, 'contacto')}>{t.cta.cotizarCorto}</a>
+  {wa && <a href={wa} target="_blank" rel="noopener" data-wa-barra><Icono nombre="whatsapp" /> {t.cta.whatsappCorto}</a>}
+</div>
+<script>
+  const barra = document.querySelector<HTMLElement>('[data-barra-movil]');
+  if (barra) {
+    document.body.classList.add('con-barra');
+    const umbral = () => (document.querySelector('.hero, .ficha-hero') as HTMLElement | null)?.offsetHeight ?? 300;
+    const ver = () => barra.classList.toggle('visible', scrollY > umbral() * 0.6);
+    ver();
+    addEventListener('scroll', ver, { passive: true });
+  }
+</script>

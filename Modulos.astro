@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Medio from '../components/Medio.astro';
+import Titulo from '../components/Titulo.astro';
+import Comparador from '../components/Comparador.astro';
+import { modulos } from '../content/modulos';
+import { alternativas, m2, textos, tr, url } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+
+interface Props { lang: Idioma }
+const { lang } = Astro.props;
+const t = textos(lang);
+const jsonld = modulos.map((m) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: tr(m.nombre, lang),
+  category: tr(m.categoria, lang),
+  description: tr(m.resumen, lang),
+  brand: { '@type': 'Brand', name: 'Trazo Fino Arquitectura' },
+  url: new URL(url(lang, 'modulos', m.slug), Astro.site).href,
+  additionalProperty: [{ '@type': 'PropertyValue', name: 'Superficie', value: m.superficie, unitCode: 'MTK' }],
+}));
+---
+<Base lang={lang} titulo={t.meta.modulos.titulo} descripcion={t.meta.modulos.descripcion} alternativas={alternativas('modulos')} actual="modulos" jsonld={jsonld}>
+  <section class="contenedor" style="padding-block:clamp(3rem,2rem + 6vw,8rem) clamp(2.5rem,2rem + 3vw,5rem)">
+    <div class="encabezado" style="margin:0">
+      <div style="display:grid;gap:1.5rem">
+        <p class="etiqueta" data-revelar>{t.modulos.etiqueta}</p>
+        <Titulo nivel={1} texto={t.modulos.titulo} class="display" />
+      </div>
+      <p class="bajada" data-revelar style="--d:3">{t.modulos.texto}</p>
+    </div>
+  </section>
+
+  {modulos.map((m, n) => (
+    <section class:list={['seccion--corta', n % 2 ? 'seccion--blanca' : '']} aria-labelledby={`mod-${m.slug}`}>
+      <div class:list={['contenedor reticula modular', { 'modular--invertido': n % 2 }]}>
+        <div class="modular__imagen">
+          <a href={url(lang, 'modulos', m.slug)} class="pieza__medio" aria-hidden="true" tabindex="-1">
+            <Medio medio={m.medios.portada} lang={lang} ratio="3x2" rotulo={`${tr(m.nombre, lang)} · ${t.ficha.exterior}`} tono={n ? 'piedra' : 'arena'} barrido sizes="(min-width: 1024px) 55vw, 100vw" />
+          </a>
+        </div>
+        <div class="modular__texto">
+          <p class="etiqueta">{tr(m.categoria, lang)}</p>
+          <h2 class="titulo-1" id={`mod-${m.slug}`}><a href={url(lang, 'modulos', m.slug)}>{tr(m.nombre, lang)}</a></h2>
+          <p class="cifra" style="font-size:var(--t-xl);color:var(--madera-oscura)">{m2(m.superficie, lang)}</p>
+          <p class="bajada">{tr(m.resumen, lang)}</p>
+          <div class="botones">
+            <a class="boton" href={url(lang, 'modulos', m.slug)}>{t.cta.verModulo}</a>
+            <a class="boton boton--linea" href={`${url(lang, 'modulos', m.slug)}#consulta`}>{t.cta.cotizar}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <Comparador lang={lang} />
+</Base>

@@ -1,0 +1,22 @@
+---
+import Medio from './Medio.astro';
+import { textos, tr, url } from '../lib/i18n';
+import type { Idioma, Proyecto } from '../lib/tipos';
+interface Props { proyecto: Proyecto; lang: Idioma; ratio?: '4x5' | '3x2'; demora?: number }
+const { proyecto: p, lang, ratio = '3x2', demora = 0 } = Astro.props;
+const t = textos(lang);
+const titulo = tr(p.titulo, lang);
+---
+<article class="obra" data-revelar style={`--d:${demora}`}>
+  <a class="obra__medio" href={url(lang, 'proyectos', p.slug)} aria-hidden="true" tabindex="-1">
+    <Medio medio={p.portada} lang={lang} ratio={ratio} rotulo={titulo} tono="piedra" sizes="(min-width: 768px) 55vw, 100vw" />
+    {p.demo && <span class="distintivo">{t.aviso.demo}</span>}
+  </a>
+  <div class="obra__meta">
+    <span>{tr(p.categoria, lang)}</span>
+    {p.anio && <span>{p.anio}</span>}
+    {p.ubicacion && <span>{p.ubicacion}</span>}
+  </div>
+  <h3><a href={url(lang, 'proyectos', p.slug)}>{titulo}</a></h3>
+  <p class="secundario">{tr(p.resumen, lang)}</p>
+</article>

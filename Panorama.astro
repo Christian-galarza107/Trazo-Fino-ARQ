@@ -1,0 +1,41 @@
+---
+/** Marcador de portada mientras no exista video o fotografía: un horizonte trazado a línea fina. */
+interface Props { nota: string }
+const { nota } = Astro.props;
+---
+<div class="panorama" aria-hidden="true">
+  <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" fill="none">
+    <g stroke="#efe9df" stroke-opacity="0.16" stroke-width="1">
+      <line x1="0" y1="522" x2="1600" y2="522" />
+      <line x1="0" y1="610" x2="1600" y2="610" stroke-opacity="0.08" />
+      <line x1="0" y1="740" x2="1600" y2="740" stroke-opacity="0.06" />
+      <line x1="1040" y1="160" x2="1040" y2="900" stroke-opacity="0.07" />
+      <line x1="1360" y1="160" x2="1360" y2="900" stroke-opacity="0.07" />
+    </g>
+    <g stroke="#dccfb8" stroke-width="1" class="panorama__trazo">
+      <path d="M980 522V392h420v130" stroke-opacity="0.55" />
+      <path d="M1180 522v-96h120v96" stroke-opacity="0.35" />
+      <path d="M940 392h500" stroke-opacity="0.35" />
+      <path d="M920 412l-30 30M1460 372l40-40" stroke-opacity="0.35" />
+    </g>
+  </svg>
+  <span class="panorama__nota">{nota}</span>
+</div>
+<style>
+  .panorama__trazo path {
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: trazar 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s forwards;
+  }
+  @keyframes trazar {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .panorama__trazo path {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+  }
+</style>

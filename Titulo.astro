@@ -1,0 +1,12 @@
+---
+/** Título con revelado palabra por palabra desde una máscara. Sin JS, se ve completo. */
+interface Props { texto: string; nivel?: 1 | 2 | 3; class?: string; id?: string; demora?: number }
+const { texto, nivel = 2, class: cls, id, demora = 0 } = Astro.props;
+const Tag = `h${nivel}` as 'h1' | 'h2' | 'h3';
+const palabras = texto.split(/\s+/).filter(Boolean);
+---
+<Tag class={cls} id={id} data-lineas data-revelar-titulo style={demora ? `--d:${demora}` : undefined} aria-label={texto}>
+  {palabras.map((p, i) => (
+    <Fragment><span class="linea-t" aria-hidden="true"><span style={`--l:${i}`}>{p}</span></span>{i < palabras.length - 1 ? ' ' : ''}</Fragment>
+  ))}
+</Tag>

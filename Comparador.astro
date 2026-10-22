@@ -1,0 +1,64 @@
+---
+/**
+ * Comparación S / M con datos CONFIRMADOS únicamente.
+ * El dibujo compara áreas a escala (cuadrados de igual superficie): no representa plantas.
+ */
+import { modulos } from '../content/modulos';
+import { m2, textos, tr, url } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+interface Props { lang: Idioma; id?: string }
+const { lang, id = 'comparar' } = Astro.props;
+const t = textos(lang);
+const c = t.modulos.comparar;
+// Filas extra: especificaciones confirmadas presentes en ambos módulos (por etiqueta en español).
+const etiquetas = [...new Set(modulos.flatMap((m) => m.especificaciones.filter((e) => e.confirmado).map((e) => e.etiqueta.es)))];
+---
+<section class="seccion" id={id} aria-labelledby={`${id}-titulo`}>
+  <div class="contenedor comparador">
+    <div style="display:grid;gap:1.5rem">
+      <p class="etiqueta" data-revelar>{t.cta.comparar}</p>
+      <h2 class="titulo-1" id={`${id}-titulo`} data-revelar>{c.titulo}</h2>
+      <p class="bajada" data-revelar>{c.texto}</p>
+      <div class="escala" data-revelar aria-hidden="true">
+        {modulos.map((m) => (
+          <figure>
+            <div class="escala__area" style={`--lado:${Math.sqrt(m.superficie).toFixed(3)}`}></div>
+            <figcaption><strong>{m.codigo}</strong><span>{m2(m.superficie, lang)}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="secundario" style="font-size:var(--t-sm)">{c.escala}</p>
+    </div>
+    <div data-revelar style="--d:2;overflow-x:auto">
+      <table class="tabla">
+        <caption class="sr-only">{c.titulo}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{c.dato}</th>
+            {modulos.map((m) => <th scope="col"><a href={url(lang, 'modulos', m.slug)}>{tr(m.nombre, lang)}</a></th>)}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">{t.ficha.superficie}</th>
+            {modulos.map((m) => <td class="cifra">{m2(m.superficie, lang)}</td>)}
+          </tr>
+          <tr>
+            <th scope="row">{t.ficha.categoria}</th>
+            {modulos.map((m) => <td>{tr(m.categoria, lang)}</td>)}
+          </tr>
+          {etiquetas.map((e) => (
+            <tr>
+              <th scope="row">{tr(modulos.flatMap((m) => m.especificaciones).find((x) => x.etiqueta.es === e)?.etiqueta, lang)}</th>
+              {modulos.map((m) => <td>{tr(m.especificaciones.find((x) => x.confirmado && x.etiqueta.es === e)?.valor, lang) || '—'}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="pendiente" style="margin-top:1.5rem;border-top:0">{c.pendientes}</p>
+      <div class="botones" style="margin-top:1.5rem">
+        {modulos.map((m) => <a class="boton boton--linea" href={url(lang, 'modulos', m.slug)}>{tr(m.nombre, lang)}</a>)}
+      </div>
+    </div>
+  </div>
+</section>

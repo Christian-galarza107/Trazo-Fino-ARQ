@@ -1,0 +1,9 @@
+---
+/** Logotipo textual provisional: TRAZO — FINO / ARQUITECTURA. El trazo central es la firma de la marca. */
+interface Props { href: string; etiqueta?: string }
+const { href, etiqueta = 'Trazo Fino Arquitectura, inicio' } = Astro.props;
+---
+<a class="logo" href={href} title={etiqueta}>
+  <span class="logo__marca">TRAZO<span class="logo__trazo"> </span>FINO</span>
+  <span class="logo__sub">ARQUITECTURA</span>
+</a>

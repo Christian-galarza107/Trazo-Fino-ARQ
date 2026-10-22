@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { sitio } from '../config/sitio';
+import { alternativas, textos } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+interface Props { lang: Idioma }
+const { lang } = Astro.props;
+const t = textos(lang);
+---
+<Base lang={lang} titulo={t.meta.privacidad.titulo} descripcion={t.meta.privacidad.descripcion} alternativas={alternativas('privacidad')}>
+  <section class="contenedor seccion" style="display:grid;gap:2rem;max-width:56rem">
+    <h1 class="titulo-1">{t.privacidad.titulo}</h1>
+    <p class="distintivo" style="justify-self:start">{t.privacidad.borrador}</p>
+    <div class="prosa">
+      {t.privacidad.parrafos.map((p) => <p>{p}</p>)}
+      {sitio.contacto.email && <p><a href={`mailto:${sitio.contacto.email}`} style="text-decoration:underline">{sitio.contacto.email}</a></p>}
+    </div>
+  </section>
+</Base>

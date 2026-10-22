@@ -1,0 +1,103 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Pie from '../components/Pie.astro';
+import BarraMovil from '../components/BarraMovil.astro';
+import { sitio } from '../config/sitio';
+import { IDIOMAS, LOCALE, textos, type Ruta } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+import fuenteTitulos from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2?url';
+import fuenteTexto from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+
+interface Props {
+  lang: Idioma;
+  titulo: string;
+  descripcion: string;
+  alternativas: Record<Idioma, string>;
+  actual?: Ruta;
+  sobreHero?: boolean;
+  imagenOg?: string;
+  jsonld?: Record<string, unknown>[];
+  noindex?: boolean;
+  /** Mensaje de WhatsApp de la barra móvil (contextual al módulo). */
+  mensajeWa?: string;
+  /** Destino del botón "Cotizar" de la barra móvil. */
+  anclaCotizar?: string;
+}
+const p = Astro.props;
+const t = textos(p.lang);
+const site = Astro.site!;
+const noindex = p.noindex || !sitio.lanzado;
+const canonical = new URL(Astro.url.pathname, site).href;
+const tituloCompleto = p.titulo.includes(sitio.marca) ? p.titulo : `${p.titulo} · ${sitio.marcaCompleta}`;
+const og = new URL(p.imagenOg ?? '/og.png', site).href;
+
+const organizacion = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  name: sitio.marcaCompleta,
+  description: sitio.descripcion,
+  url: site.href,
+  areaServed: { '@type': 'Country', name: 'Argentina' },
+  ...(sitio.contacto.telefonoVisible ? { telephone: sitio.contacto.telefonoVisible } : {}),
+  ...(sitio.contacto.email ? { email: sitio.contacto.email } : {}),
+  ...(sitio.contacto.direccion ? { address: sitio.contacto.direccion } : {}),
+  sameAs: Object.values(sitio.redes).filter(Boolean),
+};
+---
+<!doctype html>
+<html lang={LOCALE[p.lang]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={p.descripcion} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    {IDIOMAS.map((l) => <link rel="alternate" hreflang={LOCALE[l]} href={new URL(p.alternativas[l], site).href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(p.alternativas.es, site).href} />
+    <link rel="preload" href={fuenteTitulos} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f3efe7" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={sitio.marcaCompleta} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={p.descripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={LOCALE[p.lang].replace('-', '_')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <script type="application/ld+json" set:html={JSON.stringify([organizacion, ...(p.jsonld ?? [])])} />
+  </head>
+  <body id="arriba">
+    <a class="saltar" href="#contenido">{t.nav.saltar}</a>
+    {!sitio.lanzado && <div class="aviso-revision" role="note">{t.aviso.revision}</div>}
+    <Header lang={p.lang} actual={p.actual} alternativas={p.alternativas} sobreHero={p.sobreHero} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Pie lang={p.lang} />
+    <BarraMovil lang={p.lang} mensaje={p.mensajeWa ?? t.contacto.wa.saludo} ancla={p.anclaCotizar} />
+    <script>
+      // Revelados al entrar en pantalla
+      const io = new IntersectionObserver(
+        (entradas) => {
+          for (const e of entradas) {
+            if (e.isIntersecting) {
+              e.target.classList.add('visto');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { rootMargin: '0px 0px -10% 0px' },
+      );
+      document.querySelectorAll('[data-revelar], [data-lineas], [data-barrido]').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

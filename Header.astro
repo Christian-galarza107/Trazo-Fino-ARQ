@@ -1,0 +1,84 @@
+---
+import Logo from './Logo.astro';
+import { IDIOMAS, textos, url, whatsapp, type Ruta } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+
+interface Props { lang: Idioma; actual?: Ruta; alternativas: Record<Idioma, string>; sobreHero?: boolean }
+const { lang, actual, alternativas, sobreHero = false } = Astro.props;
+const t = textos(lang);
+const items: [Ruta, string][] = [
+  ['modulos', t.nav.modulos],
+  ['proyectos', t.nav.proyectos],
+  ['estudio', t.nav.estudio],
+  ['contacto', t.nav.contacto],
+];
+const wa = whatsapp(t.contacto.wa.saludo);
+---
+<header class:list={['header', { 'header--sobre': sobreHero }]} data-header>
+  <div class="contenedor header__in">
+    <Logo href={url(lang, 'inicio')} />
+    <nav class="nav" aria-label={t.nav.principal}>
+      {items.map(([r, label]) => <a href={url(lang, r)} aria-current={actual === r ? 'page' : undefined}>{label}</a>)}
+    </nav>
+    <div class="header__acciones">
+      <div class="idiomas" role="group" aria-label={t.nav.idioma}>
+        {IDIOMAS.map((l) => <a href={alternativas[l]} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l}</a>)}
+      </div>
+      <a class:list={['boton header__cta', sobreHero ? 'boton--linea-claro' : 'boton--linea']} href={`${url(lang, 'contacto')}`} data-cta-header>{t.cta.cotizar}</a>
+      <button class="boton-menu" type="button" aria-expanded="false" aria-controls="menu" data-abrir-menu>
+        <span>{t.nav.menu}</span><span class="boton-menu__icono" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label={t.nav.menu} data-menu inert>
+  <div class="menu__top">
+    <Logo href={url(lang, 'inicio')} />
+    <button class="boton-menu" type="button" data-cerrar-menu style="display:inline-flex">{t.nav.cerrar}</button>
+  </div>
+  <nav aria-label={t.nav.principal}>
+    {items.map(([r, label], i) => (
+      <a href={url(lang, r)} style={`--i:${i}`} aria-current={actual === r ? 'page' : undefined}>{label}<small>0{i + 1}</small></a>
+    ))}
+  </nav>
+  <div class="menu__pie">
+    <a class="boton boton--claro boton--ancho" href={url(lang, 'contacto')}>{t.cta.cotizar}</a>
+    {wa && <a class="boton boton--linea-claro boton--ancho" href={wa} target="_blank" rel="noopener">{t.cta.whatsapp}</a>}
+    <div class="idiomas" role="group" aria-label={t.nav.idioma}>
+      {IDIOMAS.map((l) => <a href={alternativas[l]} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l}</a>)}
+    </div>
+  </div>
+</div>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const cta = header.querySelector<HTMLElement>('[data-cta-header]');
+  const sobre = header.classList.contains('header--sobre');
+  const alScroll = () => {
+    const pasado = window.scrollY > 40;
+    header.classList.toggle('con-borde', pasado);
+    if (sobre && cta) {
+      cta.classList.toggle('boton--linea-claro', !pasado);
+      cta.classList.toggle('boton--linea', pasado);
+    }
+  };
+  alScroll();
+  addEventListener('scroll', alScroll, { passive: true });
+
+  const menu = document.querySelector<HTMLElement>('[data-menu]')!;
+  const abrir = document.querySelector<HTMLButtonElement>('[data-abrir-menu]')!;
+  const cerrar = document.querySelector<HTMLButtonElement>('[data-cerrar-menu]')!;
+  const fijar = (abierto: boolean) => {
+    menu.classList.toggle('abierto', abierto);
+    menu.toggleAttribute('inert', !abierto);
+    abrir.setAttribute('aria-expanded', String(abierto));
+    document.documentElement.classList.toggle('menu-abierto', abierto);
+    (abierto ? cerrar : abrir).focus();
+  };
+  abrir.addEventListener('click', () => fijar(true));
+  cerrar.addEventListener('click', () => fijar(false));
+  menu.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', () => fijar(false)));
+  addEventListener('keydown', (e) => e.key === 'Escape' && menu.classList.contains('abierto') && fijar(false));
+  matchMedia('(min-width: 1024px)').addEventListener('change', (e) => e.matches && menu.classList.contains('abierto') && fijar(false));
+</script>

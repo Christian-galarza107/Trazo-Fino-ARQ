@@ -1,0 +1,173 @@
+---
+/**
+ * Formulario de consulta / cotización.
+ * - Envía a /api/consulta (Pages Function → Supabase).
+ * - Si el envío no está configurado (503), lo informa y ofrece WhatsApp: nunca simula un envío.
+ * - "Enviar por WhatsApp" arma un mensaje con los datos cargados.
+ */
+import Icono from './Icono.astro';
+import { sitio } from '../config/sitio';
+import { modulos } from '../content/modulos';
+import { textos, tr, url } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+
+interface Props { lang: Idioma; modulo?: 's' | 'm'; id?: string }
+const { lang, modulo, id = 'consulta' } = Astro.props;
+const t = textos(lang);
+const f = t.contacto.form;
+const turnstile = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const nombresModulo = Object.fromEntries(modulos.map((m) => [m.slug, tr(m.nombre, lang)]));
+const cfg = {
+  wa: sitio.contacto.whatsapp,
+  estados: t.contacto.estados,
+  wa_t: t.contacto.wa,
+  enviar: f.enviar,
+  enviando: f.enviando,
+  opciones: f.moduloOpciones,
+  nombresModulo,
+};
+---
+<form class="form" id={id} data-form={JSON.stringify(cfg)} novalidate>
+  <input type="hidden" name="idioma" value={lang} />
+  <div class="trampa" aria-hidden="true"><label>Web <input name="web" tabindex="-1" autocomplete="off" /></label></div>
+
+  <div class="form__fila">
+    <div class="campo">
+      <label for={`${id}-nombre`}>{f.nombre}</label>
+      <input class="entrada" id={`${id}-nombre`} name="nombre" required minlength="2" maxlength="120" autocomplete="name" aria-describedby={`${id}-nombre-e`} />
+      <span class="campo__error" id={`${id}-nombre-e`} hidden>{f.requerido}</span>
+    </div>
+    <div class="campo">
+      <label for={`${id}-telefono`}>{f.telefono}</label>
+      <input class="entrada" id={`${id}-telefono`} name="telefono" type="tel" required minlength="6" maxlength="40" autocomplete="tel" inputmode="tel" aria-describedby={`${id}-telefono-e`} />
+      <span class="campo__error" id={`${id}-telefono-e`} hidden>{f.requerido}</span>
+    </div>
+  </div>
+  <div class="form__fila">
+    <div class="campo">
+      <label for={`${id}-email`}>{f.email} <small>({f.opcional})</small></label>
+      <input class="entrada" id={`${id}-email`} name="email" type="email" maxlength="160" autocomplete="email" />
+    </div>
+    <div class="campo">
+      <label for={`${id}-modulo`}>{f.modulo}</label>
+      <select class="entrada" id={`${id}-modulo`} name="modulo">
+        {(Object.entries(f.moduloOpciones) as [string, string][]).map(([v, l]) => <option value={v} selected={v === (modulo ?? 'ambos')}>{l}</option>)}
+      </select>
+    </div>
+  </div>
+  <div class="campo">
+    <label for={`${id}-localidad`}>{f.localidad}</label>
+    <input class="entrada" id={`${id}-localidad`} name="localidad" maxlength="120" autocomplete="address-level2" aria-describedby={`${id}-localidad-e`} required />
+    <span class="campo__error" id={`${id}-localidad-e`} hidden>{f.requerido}</span>
+  </div>
+  <div class="campo">
+    <label for={`${id}-mensaje`}>{f.mensaje} <small>({f.opcional})</small></label>
+    <textarea class="entrada" id={`${id}-mensaje`} name="mensaje" maxlength="3000" rows="4"></textarea>
+  </div>
+  <label class="consentimiento">
+    <input type="checkbox" name="consentimiento" required />
+    <span>{f.consentimiento} <a href={url(lang, 'privacidad')}>{f.privacidad}</a>.</span>
+  </label>
+  {turnstile && <div class="cf-turnstile" data-sitekey={turnstile} data-language={lang}></div>}
+  <p class="estado" role="status" aria-live="polite" data-estado hidden></p>
+  <div class="botones">
+    <button class="boton" type="submit" data-enviar>{f.enviar}</button>
+    {sitio.contacto.whatsapp && <button class="boton boton--linea" type="button" data-wa><Icono nombre="whatsapp" /> {f.whatsapp}</button>}
+  </div>
+</form>
+{turnstile && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
+<script>
+  type Cfg = {
+    wa: string | null;
+    estados: Record<'ok' | 'error' | 'pendiente' | 'invalido', string>;
+    wa_t: Record<string, string>;
+    enviar: string;
+    enviando: string;
+    opciones: Record<string, string>;
+    nombresModulo: Record<string, string>;
+  };
+
+  document.querySelectorAll<HTMLFormElement>('[data-form]').forEach((form) => {
+    const cfg: Cfg = JSON.parse(form.dataset.form!);
+    const estado = form.querySelector<HTMLElement>('[data-estado]')!;
+    const enviar = form.querySelector<HTMLButtonElement>('[data-enviar]')!;
+    const mostrar = (tipo: 'ok' | 'error' | 'pendiente', texto: string) => {
+      estado.hidden = false;
+      estado.className = `estado estado--${tipo}`;
+      estado.textContent = texto;
+    };
+
+    const validar = () => {
+      let ok = true;
+      const email = form.querySelector<HTMLInputElement>('[name=email]')!;
+      email.setAttribute('aria-invalid', String(!email.checkValidity()));
+      if (!email.checkValidity()) ok = false;
+      form.querySelectorAll<HTMLInputElement>('input[required]:not([type=checkbox])').forEach((el) => {
+        const valido = el.checkValidity() && el.value.trim().length >= (el.minLength > 0 ? el.minLength : 1);
+        el.setAttribute('aria-invalid', String(!valido));
+        const err = form.querySelector<HTMLElement>(`#${el.getAttribute('aria-describedby')}`);
+        if (err) err.hidden = valido;
+        if (!valido) ok = false;
+      });
+      const consentimiento = form.querySelector<HTMLInputElement>('[name=consentimiento]')!;
+      if (!consentimiento.checked) ok = false;
+      return ok;
+    };
+
+    const mensajeWa = () => {
+      const d = new FormData(form);
+      const modulo = String(d.get('modulo') ?? '');
+      const nombreModulo = cfg.nombresModulo[modulo];
+      const lineas = [
+        nombreModulo ? cfg.wa_t.modulo.replace('{modulo}', nombreModulo) : cfg.wa_t.saludo,
+        '',
+        d.get('nombre') && `${cfg.wa_t.nombre}: ${d.get('nombre')}`,
+        !nombreModulo && modulo && `${cfg.wa_t.modelo}: ${cfg.opciones[modulo]}`,
+        d.get('localidad') && `${cfg.wa_t.localidad}: ${d.get('localidad')}`,
+        d.get('email') && `${cfg.wa_t.email}: ${d.get('email')}`,
+        d.get('mensaje') && `\n${d.get('mensaje')}`,
+      ];
+      return lineas.filter((l) => l !== false && l !== null && l !== undefined).join('\n').trim();
+    };
+
+    form.querySelector('[data-wa]')?.addEventListener('click', () => {
+      if (!cfg.wa) return;
+      window.open(`https://wa.me/${cfg.wa}?text=${encodeURIComponent(mensajeWa())}`, '_blank', 'noopener');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validar()) {
+        mostrar('error', cfg.estados.invalido);
+        form.querySelector<HTMLElement>('[aria-invalid=true], [name=consentimiento]:not(:checked)')?.focus();
+        return;
+      }
+      const datos = Object.fromEntries(new FormData(form));
+      if (datos.web) return;
+      enviar.disabled = true;
+      enviar.textContent = cfg.enviando;
+      try {
+        const res = await fetch('/api/consulta', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ ...datos, pagina: location.pathname }),
+        });
+        if (res.status === 503 || res.status === 404 || res.status === 405) {
+          mostrar('pendiente', cfg.estados.pendiente);
+        } else if (!res.ok) {
+          mostrar('error', cfg.estados.error);
+        } else {
+          form.reset();
+          mostrar('ok', cfg.estados.ok);
+        }
+      } catch {
+        mostrar('error', cfg.estados.error);
+      } finally {
+        enviar.disabled = false;
+        enviar.textContent = cfg.enviar;
+        (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
+      }
+    });
+  });
+</script>

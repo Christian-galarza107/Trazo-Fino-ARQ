@@ -1,0 +1,42 @@
+---
+/**
+ * Genera todas las páginas públicas en es (sin prefijo), en (/en) y pt (/pt).
+ * Español: /  /modulos/  /modulos/s/  /modulos/m/  /proyectos/  /estudio/  /contacto/  /privacidad/
+ */
+import type { GetStaticPaths } from 'astro';
+import Inicio from '../views/Inicio.astro';
+import Modulos from '../views/Modulos.astro';
+import ModuloVista from '../views/Modulo.astro';
+import Proyectos from '../views/Proyectos.astro';
+import ProyectoVista from '../views/Proyecto.astro';
+import Estudio from '../views/Estudio.astro';
+import Contacto from '../views/Contacto.astro';
+import Privacidad from '../views/Privacidad.astro';
+import { modulos } from '../content/modulos';
+import { proyectosVisibles } from '../lib/proyectos';
+import { IDIOMAS, url, type Ruta } from '../lib/i18n';
+import type { Idioma, Modulo, Proyecto } from '../lib/tipos';
+
+type Vista = 'inicio' | 'modulos' | 'modulo' | 'proyectos' | 'proyecto' | 'estudio' | 'contacto' | 'privacidad';
+type Props = { vista: Vista; lang: Idioma; modulo?: Modulo; proyecto?: Proyecto };
+
+export const getStaticPaths = (() => {
+  const param = (u: string) => u.replace(/^\/|\/$/g, '') || undefined;
+  const simples: Ruta[] = ['inicio', 'modulos', 'proyectos', 'estudio', 'contacto', 'privacidad'];
+  return IDIOMAS.flatMap((lang) => [
+    ...simples.map((r) => ({ params: { ruta: param(url(lang, r)) }, props: { vista: r as Vista, lang } satisfies Props })),
+    ...modulos.map((modulo) => ({ params: { ruta: param(url(lang, 'modulos', modulo.slug)) }, props: { vista: 'modulo' as Vista, lang, modulo } satisfies Props })),
+    ...proyectosVisibles().map((proyecto) => ({ params: { ruta: param(url(lang, 'proyectos', proyecto.slug)) }, props: { vista: 'proyecto' as Vista, lang, proyecto } satisfies Props })),
+  ]);
+}) satisfies GetStaticPaths;
+
+const { vista, lang, modulo, proyecto } = Astro.props as Props;
+---
+{vista === 'inicio' && <Inicio lang={lang} />}
+{vista === 'modulos' && <Modulos lang={lang} />}
+{vista === 'modulo' && modulo && <ModuloVista lang={lang} modulo={modulo} />}
+{vista === 'proyectos' && <Proyectos lang={lang} />}
+{vista === 'proyecto' && proyecto && <ProyectoVista lang={lang} proyecto={proyecto} />}
+{vista === 'estudio' && <Estudio lang={lang} />}
+{vista === 'contacto' && <Contacto lang={lang} />}
+{vista === 'privacidad' && <Privacidad lang={lang} />}

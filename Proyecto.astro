@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import Medio from '../components/Medio.astro';
+import Titulo from '../components/Titulo.astro';
+import Obra from '../components/Obra.astro';
+import { proyectosVisibles } from '../lib/proyectos';
+import { imagen } from '../lib/medios';
+import { alternativas, parrafos, textos, tr, url } from '../lib/i18n';
+import type { Idioma, Proyecto } from '../lib/tipos';
+interface Props { lang: Idioma; proyecto: Proyecto }
+const { lang, proyecto: p } = Astro.props;
+const t = textos(lang);
+const titulo = tr(p.titulo, lang);
+const otros = proyectosVisibles().filter((x) => x.slug !== p.slug).slice(0, 2);
+const datos = [
+  { k: t.proyectos.categoria, v: tr(p.categoria, lang) },
+  ...(p.anio ? [{ k: t.proyectos.anio, v: String(p.anio) }] : []),
+  ...(p.ubicacion ? [{ k: t.proyectos.ubicacion, v: p.ubicacion }] : []),
+  ...p.detalles.filter((d) => d.confirmado).map((d) => ({ k: tr(d.etiqueta, lang), v: tr(d.valor, lang) })),
+];
+const portadaImg = imagen(p.portada);
+const jsonld = p.demo
+  ? []
+  : [{ '@context': 'https://schema.org', '@type': 'CreativeWork', name: titulo, about: tr(p.resumen, lang), creator: { '@type': 'Organization', name: 'Trazo Fino Arquitectura' }, ...(p.anio ? { dateCreated: String(p.anio) } : {}) }];
+---
+<Base lang={lang} titulo={titulo} descripcion={tr(p.resumen, lang)} alternativas={alternativas('proyectos', p.slug)} actual="proyectos" sobreHero imagenOg={portadaImg?.src} jsonld={jsonld} noindex={p.demo}>
+  <section class="ficha-hero" aria-labelledby="obra-titulo">
+    <div class="hero__medio"><Medio medio={p.portada} lang={lang} ratio="libre" rotulo={titulo} tono="oscuro" prioridad class="medio--lleno" /></div>
+    <div class="contenedor ficha-hero__in">
+      <div style="display:grid;gap:1.25rem">
+        <nav class="migas" aria-label="Breadcrumb"><a href={url(lang, 'proyectos')}>← {t.proyectos.volver}</a></nav>
+        <p class="etiqueta" style="color:var(--arena)">{tr(p.categoria, lang)}</p>
+        <Titulo nivel={1} texto={titulo} class="display" id="obra-titulo" />
+        {p.demo && <p class="distintivo" style="justify-self:start">{t.proyectos.demoAviso}</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor reticula ficha-obra">
+      <aside class="ficha-obra__datos" data-revelar>
+        <dl class="datos">{datos.map((d) => <div><dt>{d.k}</dt><dd>{d.v}</dd></div>)}</dl>
+      </aside>
+      <div class="ficha-obra__texto prosa" data-revelar style="--d:1">{parrafos(tr(p.descripcion, lang)).map((x) => <p>{x}</p>)}</div>
+    </div>
+  </section>
+
+  {(p.galeria.length > 0 || p.demo) && (
+    <section class="seccion--corta">
+      <div class="contenedor">
+        <h2 class="sr-only">{t.proyectos.galeria}</h2>
+        <div class="galeria-obra">
+          {(p.galeria.length ? p.galeria : [null, null, null]).map((md, k) => (
+            <Medio medio={md} lang={lang} ratio={k % 3 === 0 ? '21x9' : k % 3 === 1 ? '3x2' : '4x5'} rotulo={`${titulo} · ${t.proyectos.galeria} 0${k + 1}`} tono={k % 2 ? 'piedra' : 'arena'} barrido sizes="(min-width: 768px) 60vw, 100vw" />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {p.planos.length > 0 && (
+    <section class="seccion">
+      <div class="contenedor">
+        <h2 class="titulo-1" style="margin-bottom:3rem">{t.proyectos.planos}</h2>
+        <div class="galeria-obra">{p.planos.map((md) => <Medio medio={md} lang={lang} ratio="libre" rotulo={t.proyectos.planos} sizes="100vw" />)}</div>
+      </div>
+    </section>
+  )}
+
+  {otros.length > 0 && (
+    <section class="seccion seccion--blanca">
+      <div class="contenedor">
+        <h2 class="titulo-1" style="margin-bottom:3rem">{t.nav.proyectos}</h2>
+        <div class="mosaico">{otros.map((o, n) => <Obra proyecto={o} lang={lang} ratio={n ? '4x5' : '3x2'} demora={n} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>

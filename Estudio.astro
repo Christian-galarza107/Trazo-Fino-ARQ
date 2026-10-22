@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import Medio from '../components/Medio.astro';
+import Titulo from '../components/Titulo.astro';
+import { sitio } from '../config/sitio';
+import { portada } from '../content/portada';
+import { alternativas, textos, url } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+interface Props { lang: Idioma }
+const { lang } = Astro.props;
+const t = textos(lang);
+const e = t.estudio;
+---
+<Base lang={lang} titulo={t.meta.estudio.titulo} descripcion={t.meta.estudio.descripcion} alternativas={alternativas('estudio')} actual="estudio">
+  <section class="contenedor" style="padding-block:clamp(3rem,2rem + 6vw,8rem) clamp(3rem,2rem + 4vw,6rem)">
+    <div class="encabezado" style="margin:0">
+      <div style="display:grid;gap:1.5rem">
+        <p class="etiqueta" data-revelar>{e.etiqueta}</p>
+        <Titulo nivel={1} texto={e.titulo} class="display" />
+      </div>
+      <p class="bajada" data-revelar style="--d:3">{e.texto}</p>
+    </div>
+  </section>
+
+  <div class="contenedor"><Medio medio={portada.estudio} lang={lang} ratio="21x9" rotulo={`${e.etiqueta} · Trazo Fino`} tono="piedra" barrido sizes="100vw" /></div>
+
+  <section class="seccion">
+    <div class="contenedor reticula presentacion">
+      <div class="presentacion__titulo" style="display:grid;gap:1.5rem">
+        <p class="etiqueta" data-revelar>{e.enfoque.titulo}</p>
+        <Titulo texto={e.enfoque.texto} class="titulo-2" />
+      </div>
+      <div class="presentacion__texto" data-revelar style="--d:2">
+        <p class="etiqueta">{e.vision.titulo}</p>
+        <p class="bajada">{e.vision.texto}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--blanca" aria-labelledby="equipo">
+    <div class="contenedor">
+      <h2 class="titulo-1" id="equipo" style="margin-bottom:clamp(2.5rem,2rem + 3vw,4.5rem)" data-revelar>{e.equipo.titulo}</h2>
+      {sitio.equipo.map((p) => (
+        <article class="persona" data-revelar>
+          <Medio medio={null} lang={lang} ratio="4x5" rotulo={`${p.nombre} · ${e.equipo.fotoPendiente}`} tono="arena" />
+          <div style="display:grid;gap:1rem;padding-bottom:1rem">
+            <p class="etiqueta">{p.rol ?? e.equipo.rolPendiente}</p>
+            <h3 class="titulo-1">{p.nombre}</h3>
+            <p class="pendiente">{e.equipo.bioPendiente}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="seccion seccion--oscura" aria-labelledby="servicios">
+    <div class="contenedor reticula presentacion">
+      <div class="presentacion__titulo" style="display:grid;gap:1.5rem;align-content:start">
+        <p class="etiqueta">{e.servicios.titulo}</p>
+        <h2 class="titulo-1" id="servicios">{sitio.descripcion}</h2>
+      </div>
+      <div class="presentacion__texto">
+        <ul class="servicios">{e.servicios.items.map((s, n) => <li data-revelar style={`--d:${n}`}>{s}<span>0{n + 1}</span></li>)}</ul>
+        <a class="boton boton--claro" style="justify-self:start" href={url(lang, 'contacto')}>{t.cta.cotizar}</a>
+      </div>
+    </div>
+  </section>
+</Base>

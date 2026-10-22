@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Titulo from '../components/Titulo.astro';
+import FormConsulta from '../components/FormConsulta.astro';
+import Icono from '../components/Icono.astro';
+import { sitio } from '../config/sitio';
+import { alternativas, textos, whatsapp } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+interface Props { lang: Idioma }
+const { lang } = Astro.props;
+const t = textos(lang);
+const c = sitio.contacto;
+const wa = whatsapp(t.contacto.wa.saludo);
+---
+<Base lang={lang} titulo={t.meta.contacto.titulo} descripcion={t.meta.contacto.descripcion} alternativas={alternativas('contacto')} actual="contacto" anclaCotizar="#consulta">
+  <section class="contenedor" style="padding-block:clamp(3rem,2rem + 6vw,8rem) var(--seccion)">
+    <div class="consulta">
+      <div style="display:grid;gap:2rem;align-content:start">
+        <p class="etiqueta" data-revelar>{t.contacto.etiqueta}</p>
+        <Titulo nivel={1} texto={t.contacto.titulo} class="titulo-1" />
+        <p class="bajada" data-revelar>{t.contacto.texto}</p>
+        <div data-revelar style="--d:2;display:grid;gap:1.25rem;margin-top:1rem">
+          <p class="etiqueta">{t.contacto.directo}</p>
+          <ul class="contactos">
+            {wa && <li><span class="secundario" style="font-size:var(--t-sm)">WhatsApp</span><br /><a href={wa} target="_blank" rel="noopener">{c.telefonoVisible}</a></li>}
+            {c.email && <li><span class="secundario" style="font-size:var(--t-sm)">Email</span><br /><a href={`mailto:${c.email}`}>{c.email}</a></li>}
+            {c.direccion && <li>{c.direccion}</li>}
+          </ul>
+          {wa && <a class="boton boton--linea" style="justify-self:start" href={wa} target="_blank" rel="noopener"><Icono nombre="whatsapp" /> {t.cta.whatsapp}</a>}
+        </div>
+      </div>
+      <div class="panel-claro" id="consulta" data-revelar style="--d:1"><FormConsulta lang={lang} id="form-contacto" /></div>
+    </div>
+  </section>
+</Base>

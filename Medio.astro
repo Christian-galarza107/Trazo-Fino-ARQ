@@ -1,0 +1,54 @@
+---
+/**
+ * Imagen optimizada (AVIF/WebP responsive) o, si todavía no existe, un marcador
+ * visual con el nombre de la imagen esperada. Los renders se rotulan como ilustrativos.
+ */
+import { Picture } from 'astro:assets';
+import { imagen } from '../lib/medios';
+import { textos, tr } from '../lib/i18n';
+import type { Idioma, Medio as TMedio } from '../lib/tipos';
+
+interface Props {
+  medio: TMedio | null | undefined;
+  lang: Idioma;
+  /** Proporción: 4x5 | 3x2 | 16x9 | 1x1 | 21x9 | libre */
+  ratio?: '4x5' | '3x2' | '16x9' | '1x1' | '21x9' | 'libre';
+  /** Texto del marcador, p. ej. "Módulo S · Exterior". */
+  rotulo: string;
+  tono?: 'arena' | 'piedra' | 'oscuro' | 'claro';
+  sizes?: string;
+  prioridad?: boolean;
+  barrido?: boolean;
+  demora?: number;
+  class?: string;
+}
+const { medio, lang, ratio = '3x2', rotulo, tono = 'claro', sizes = '100vw', prioridad = false, barrido = false, demora = 0, class: cls } = Astro.props;
+const t = textos(lang);
+const img = imagen(medio);
+const alt = tr(medio?.alt, lang);
+const etiquetaOrigen = medio?.origen === 'render-ia' ? t.aviso.renderIA : medio?.origen === 'render' ? t.aviso.render : null;
+---
+<div
+  class:list={['medio', ratio !== 'libre' && `medio--${ratio}`, cls]}
+  data-barrido={barrido ? '' : undefined}
+  style={demora ? `--d:${demora}` : undefined}
+>
+  {img ? (
+    <Picture
+      src={img}
+      alt={alt}
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1200, 1600, 2400].filter((w) => w <= img.width)}
+      sizes={sizes}
+      loading={prioridad ? 'eager' : 'lazy'}
+      fetchpriority={prioridad ? 'high' : 'auto'}
+      decoding="async"
+      style={medio?.foco ? `object-position:${medio.foco}` : undefined}
+    />
+  ) : (
+    <div class:list={['marcador', tono !== 'claro' && `marcador--${tono}`]} role="img" aria-label={`${t.aviso.imagenPendiente}: ${rotulo}`}>
+      <span class="marcador__texto"><strong>{rotulo}</strong>{t.aviso.imagenPendiente}</span>
+    </div>
+  )}
+  {etiquetaOrigen && <span class="distintivo medio__rotulo">{etiquetaOrigen}</span>}
+</div>

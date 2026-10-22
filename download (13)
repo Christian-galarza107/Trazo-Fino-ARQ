@@ -1,0 +1,18 @@
+# Dependencias y build
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+# Variables privadas (nunca subir)
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Salida del optimizador de medios
+media-out/
