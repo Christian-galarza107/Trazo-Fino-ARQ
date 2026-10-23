@@ -24,6 +24,22 @@ export interface Video {
   origen: OrigenImagen;
 }
 
+/** Video de portada con versión vertical para celulares y pósters optimizados. */
+export interface VideoPortada {
+  /** Rutas dentro de public/. */
+  escritorio: string;
+  movil: string | null;
+  /** Alternativas WebM (VP9) para navegadores sin H.264. */
+  escritorioWebm?: string;
+  movilWebm?: string;
+  /** Pósters dentro de src/assets/media/ (se optimizan a AVIF/WebP). */
+  posterEscritorio: Medio;
+  posterMovil: Medio | null;
+  origen: OrigenImagen;
+  /** Encuadre en pantallas angostas cuando no hay versión móvil (object-position). */
+  foco?: string;
+}
+
 /** Dato técnico. Solo se muestra si `confirmado` es true. */
 export interface Dato {
   etiqueta: T;

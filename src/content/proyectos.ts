@@ -30,9 +30,9 @@ export const proyectos: Proyecto[] = [
 ];
 
 const textoDemo = {
-  es: 'Este es un proyecto de demostración para evaluar el diseño de la sección. No representa una obra realizada por Trazo Fino.',
-  en: 'This is a demonstration project used to review the section design. It does not represent a work built by Trazo Fino.',
-  pt: 'Este é um projeto de demonstração para avaliar o design da seção. Não representa uma obra realizada pela Trazo Fino.',
+  es: 'Este es un proyecto de demostración para evaluar el diseño de la sección. No representa una obra realizada por TRAZOFINO.',
+  en: 'This is a demonstration project used to review the section design. It does not represent a work built by TRAZOFINO.',
+  pt: 'Este é um projeto de demonstração para avaliar o design da seção. Não representa uma obra realizada pela TRAZOFINO.',
 };
 
 export const demostraciones: Proyecto[] = [

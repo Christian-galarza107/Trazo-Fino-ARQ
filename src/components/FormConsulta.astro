@@ -80,7 +80,7 @@ const cfg = {
 <script>
   type Cfg = {
     wa: string | null;
-    estados: Record<'ok' | 'error' | 'pendiente' | 'invalido', string>;
+    estados: Record<'ok' | 'error' | 'pendiente' | 'invalido' | 'limite', string>;
     wa_t: Record<string, string>;
     enviar: string;
     enviando: string;
@@ -136,8 +136,10 @@ const cfg = {
       window.open(`https://wa.me/${cfg.wa}?text=${encodeURIComponent(mensajeWa())}`, '_blank', 'noopener');
     });
 
+    let enviando = false;
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (enviando) return; // evita envíos repetidos por doble clic
       if (!validar()) {
         mostrar('error', cfg.estados.invalido);
         form.querySelector<HTMLElement>('[aria-invalid=true], [name=consentimiento]:not(:checked)')?.focus();
@@ -145,28 +147,40 @@ const cfg = {
       }
       const datos = Object.fromEntries(new FormData(form));
       if (datos.web) return;
+      enviando = true;
       enviar.disabled = true;
       enviar.textContent = cfg.enviando;
+      let exito = false;
       try {
         const res = await fetch('/api/consulta', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ ...datos, pagina: location.pathname }),
         });
-        if (res.status === 503 || res.status === 404 || res.status === 405) {
-          mostrar('pendiente', cfg.estados.pendiente);
-        } else if (!res.ok) {
-          mostrar('error', cfg.estados.error);
-        } else {
+        const r = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+        if (res.ok && r.ok) {
+          exito = true;
           form.reset();
           mostrar('ok', cfg.estados.ok);
+        } else if (r.error === 'sin_configurar' || res.status === 404 || res.status === 405) {
+          mostrar('pendiente', cfg.estados.pendiente);
+        } else if (res.status === 429) {
+          mostrar('error', cfg.estados.limite);
+        } else {
+          mostrar('error', cfg.estados.error);
         }
       } catch {
         mostrar('error', cfg.estados.error);
       } finally {
-        enviar.disabled = false;
         enviar.textContent = cfg.enviar;
         (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
+        // Tras un envío exitoso, el botón queda inactivo 30 s para no duplicar la consulta.
+        const liberar = () => {
+          enviando = false;
+          enviar.disabled = false;
+        };
+        if (exito) setTimeout(liberar, 30000);
+        else liberar();
       }
     });
   });

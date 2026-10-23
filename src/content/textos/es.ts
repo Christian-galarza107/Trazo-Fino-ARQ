@@ -2,15 +2,15 @@
  * ============================================================================
  *  TEXTOS DEL SITIO — Español (idioma principal)
  *  Textos institucionales, comerciales, de interfaz y SEO.
- *  Los textos marcados como BORRADOR requieren aprobación de Trazo Fino.
+ *  Los textos marcados como BORRADOR requieren aprobación de TRAZOFINO.
  *  en.ts y pt.ts tienen exactamente las mismas claves.
  * ============================================================================
  */
 export const es = {
   meta: {
     inicio: {
-      titulo: 'Trazo Fino Arquitectura · Viviendas modulares',
-      descripcion: 'Arquitectura para nuevas formas de habitar. Viviendas modulares de 24 m² y 48 m² diseñadas y construidas por Trazo Fino Arquitectura.',
+      titulo: 'TRAZOFINO ARQUITECTURA · Viviendas modulares',
+      descripcion: 'Arquitectura para nuevas formas de habitar. Viviendas modulares de 24 m² y 48 m² diseñadas y construidas por TRAZOFINO ARQUITECTURA.',
     },
     modulos: {
       titulo: 'Casas modulares · Módulo S y Módulo M',
@@ -18,17 +18,17 @@ export const es = {
     },
     proyectos: {
       titulo: 'Proyectos de arquitectura',
-      descripcion: 'Portafolio de proyectos de arquitectura del estudio Trazo Fino.',
+      descripcion: 'Portafolio de proyectos de arquitectura del estudio TRAZOFINO.',
     },
     estudio: {
       titulo: 'Estudio',
-      descripcion: 'Trazo Fino Arquitectura: diseño / proyecto, dirección y ejecución de obras.',
+      descripcion: 'TRAZOFINO ARQUITECTURA: diseño / proyecto, dirección y ejecución de obras.',
     },
     contacto: {
       titulo: 'Contacto y cotizaciones',
       descripcion: 'Solicitá tu cotización del Módulo S o del Módulo M por formulario o WhatsApp.',
     },
-    privacidad: { titulo: 'Política de privacidad', descripcion: 'Política de privacidad de Trazo Fino Arquitectura.' },
+    privacidad: { titulo: 'Política de privacidad', descripcion: 'Política de privacidad de TRAZOFINO ARQUITECTURA.' },
     noEncontrada: { titulo: 'Página no encontrada', descripcion: 'La página que buscás no existe.' },
   },
 
@@ -73,12 +73,14 @@ export const es = {
       // BORRADOR
       texto: 'Diseñamos y construimos viviendas modulares con criterio de arquitectura. Dos módulos, de 24 y 48 m², para empezar a habitar.',
       desplazar: 'Desplazar',
+      pausar: 'Pausar video',
+      reproducir: 'Reproducir video',
     },
     presentacion: {
-      etiqueta: 'Trazo Fino',
+      etiqueta: 'TRAZOFINO',
       titulo: 'Una práctica de arquitectura, aplicada a la vivienda modular.',
       // BORRADOR basado en la descripción provista por la empresa
-      texto: 'Trazo Fino es una empresa constructora dedicada al diseño y proyecto, la dirección y la ejecución de obras. Llevamos esa misma práctica profesional a viviendas modulares pensadas para habitar con claridad.',
+      texto: 'TRAZOFINO es una empresa constructora dedicada al diseño y proyecto, la dirección y la ejecución de obras. Llevamos esa misma práctica profesional a viviendas modulares pensadas para habitar con claridad.',
     },
     modular: {
       etiqueta: 'Viviendas modulares',
@@ -93,8 +95,8 @@ export const es = {
     },
     ventajas: {
       etiqueta: 'El enfoque',
-      titulo: 'Por qué un módulo de Trazo Fino.',
-      // BORRADOR: afirmaciones a validar por Trazo Fino antes del lanzamiento.
+      titulo: 'Por qué un módulo de TRAZOFINO.',
+      // BORRADOR: afirmaciones a validar por TRAZOFINO antes del lanzamiento.
       items: [
         { titulo: 'Proyecto de arquitectura', texto: 'Cada módulo parte de un diseño resuelto: sabés desde el inicio qué superficie y qué propuesta estás evaluando.' },
         { titulo: 'Dos superficies claras', texto: '24 m² y 48 m²: dos escalas para necesidades distintas, comparables de forma directa.' },
@@ -127,7 +129,7 @@ export const es = {
   modulos: {
     etiqueta: 'Casas modulares',
     titulo: 'Módulo S y Módulo M.',
-    texto: 'Dos viviendas modulares diseñadas por Trazo Fino Arquitectura. Explorá cada una o comparalas.',
+    texto: 'Dos viviendas modulares diseñadas por TRAZOFINO ARQUITECTURA. Explorá cada una o comparalas.',
     comparar: {
       titulo: 'Comparar módulos',
       texto: 'La comparación muestra únicamente los datos confirmados de cada módulo.',
@@ -181,7 +183,7 @@ export const es = {
 
   estudio: {
     etiqueta: 'Estudio',
-    titulo: 'Trazo Fino Arquitectura.',
+    titulo: 'TRAZOFINO ARQUITECTURA.',
     // Descripción provista por la empresa
     texto: 'Empresa constructora dedicada al diseño / proyecto, dirección y ejecución de obras.',
     enfoque: {
@@ -220,7 +222,7 @@ export const es = {
       localidad: 'Localidad aproximada del proyecto',
       mensaje: 'Mensaje adicional',
       opcional: 'opcional',
-      consentimiento: 'Acepto que Trazo Fino utilice estos datos para responder mi consulta, según la',
+      consentimiento: 'Acepto que TRAZOFINO utilice estos datos para responder mi consulta, según la',
       privacidad: 'política de privacidad',
       enviar: 'Enviar consulta',
       enviando: 'Enviando…',
@@ -230,12 +232,13 @@ export const es = {
     estados: {
       ok: 'Recibimos tu consulta. Te vamos a responder a la brevedad.',
       error: 'No pudimos enviar la consulta. Probá nuevamente o escribinos por WhatsApp.',
+      limite: 'Recibimos muchas consultas en poco tiempo. Probá nuevamente en unos minutos o escribinos por WhatsApp.',
       pendiente: 'El envío por formulario todavía no está habilitado. Podés enviar esta misma consulta por WhatsApp.',
       invalido: 'Revisá los campos marcados.',
     },
     wa: {
-      saludo: 'Hola Trazo Fino, quiero hacer una consulta.',
-      modulo: 'Hola Trazo Fino, me interesa el {modulo}.',
+      saludo: 'Hola TRAZOFINO, quiero hacer una consulta.',
+      modulo: 'Hola TRAZOFINO, me interesa el {modulo}.',
       nombre: 'Nombre',
       modelo: 'Modelo',
       localidad: 'Localidad',
@@ -249,7 +252,7 @@ export const es = {
     titulo: 'Política de privacidad',
     borrador: 'Borrador editable. Requiere revisión legal antes de su publicación definitiva.',
     parrafos: [
-      'Trazo Fino Arquitectura utiliza los datos que nos envíes por el formulario o por WhatsApp (nombre, correo electrónico, teléfono, modelo de interés, localidad y mensaje) únicamente para responder tu consulta y preparar una cotización.',
+      'TRAZOFINO ARQUITECTURA utiliza los datos que nos envíes por el formulario o por WhatsApp (nombre, correo electrónico, teléfono, modelo de interés, localidad y mensaje) únicamente para responder tu consulta y preparar una cotización.',
       'No vendemos ni cedemos tus datos a terceros. Los datos del formulario se almacenan en un servicio de base de datos con acceso restringido.',
       'Podés solicitar el acceso, la rectificación o la eliminación de tus datos escribiéndonos por los canales de contacto de este sitio.',
     ],

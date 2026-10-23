@@ -16,7 +16,7 @@ const jsonld = modulos.map((m) => ({
   name: tr(m.nombre, lang),
   category: tr(m.categoria, lang),
   description: tr(m.resumen, lang),
-  brand: { '@type': 'Brand', name: 'Trazo Fino Arquitectura' },
+  brand: { '@type': 'Brand', name: 'TRAZOFINO ARQUITECTURA' },
   url: new URL(url(lang, 'modulos', m.slug), Astro.site).href,
   additionalProperty: [{ '@type': 'PropertyValue', name: 'Superficie', value: m.superficie, unitCode: 'MTK' }],
 }));

@@ -58,13 +58,26 @@ Astro genera automáticamente versiones AVIF y WebP en 480, 800, 1200, 1600 y 24
 **Proporciones recomendadas:** portada de módulo 16:9 horizontal (se recorta en celular), galería 16:9, tarjetas 4:5 (S) y 3:2 (M), plano cuadrado o libre.
 
 ## Video de portada
-1. Optimizá: `npm run media:optimize -- ruta/video.mp4` (requiere ffmpeg). Genera MP4, WebM y póster en `media-out/`.
-2. Copiá los archivos a `public/media/video/`.
-3. En `src/content/portada.ts`:
-   ```ts
-   video: { mp4: '/media/video/portada.mp4', webm: '/media/video/portada.webm', poster: '/media/video/portada-poster.webp', origen: 'render-ia' },
-   ```
-Ideal: 6 a 12 segundos en loop, sin audio y de menos de 4 MB. No se reproduce si el visitante activó "ahorro de datos" o "reducir movimiento".
+El video actual es un render de Google Flow, rotulado en el sitio como "Render ilustrativo generado con IA". Su configuración está en `src/content/portada.ts`:
+
+| Archivo | Uso | Tamaño |
+|---|---|---|
+| `public/media/video/portada-escritorio.mp4` | H.264, 1072×716, escritorio y tablet | 2,5 MB |
+| `public/media/video/portada-escritorio.webm` | VP9, para navegadores sin H.264 | 2,8 MB |
+| `public/media/video/portada-movil.mp4` | H.264, 404×716 vertical, celulares | 0,85 MB |
+| `public/media/video/portada-movil.webm` | VP9 vertical | 0,77 MB |
+| `src/assets/media/portada/poster-*.jpg` | Pósters (se publican en AVIF/WebP) | — |
+
+Para reemplazarlo:
+1. Partí del MP4 original y repetí el proceso documentado en `portada.ts`: recorte de franjas, sin audio, bucle ida y vuelta, H.264 + VP9 y póster del primer cuadro.
+2. Como alternativa rápida, usá `npm run media:optimize -- video.mp4`.
+
+Cómo se comporta el video:
+- El póster es la imagen principal de carga.
+- El video aparece con un fundido cuando empieza a reproducirse.
+- Hay un botón accesible para pausarlo.
+- Se pausa solo al salir de pantalla.
+- No se carga con "ahorro de datos" ni con "reducir movimiento".
 
 ## Proyectos
 Copiá el ejemplo comentado de `src/content/proyectos.ts`, completalo y poné `publicado: true`. Los proyectos de `demostraciones` solo se ven con `PUBLIC_MOSTRAR_DEMOS=true`, siempre rotulados, y nunca se publican.

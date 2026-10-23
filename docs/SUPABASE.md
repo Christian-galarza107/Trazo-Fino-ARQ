@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Proyecto | `trazo-fino-arq` (organización "Trazo Fino", plan Free) |
+| Proyecto | `trazo-fino-arq` (organización "Trazo Fino" en Supabase, plan Free) |
 | Ref | `xejncuwncervzxtusqah` |
 | Región | South America (São Paulo) — `sa-east-1` |
 | URL de la API | `https://xejncuwncervzxtusqah.supabase.co` |

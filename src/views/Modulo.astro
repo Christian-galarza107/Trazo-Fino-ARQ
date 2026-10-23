@@ -31,7 +31,7 @@ const jsonld = [
     name: nombre,
     category: tr(m.categoria, lang),
     description: tr(m.seo.descripcion, lang),
-    brand: { '@type': 'Brand', name: 'Trazo Fino Arquitectura' },
+    brand: { '@type': 'Brand', name: 'TRAZOFINO ARQUITECTURA' },
     ...(portadaImg ? { image: new URL(portadaImg.src, Astro.site).href } : {}),
     additionalProperty: [{ '@type': 'PropertyValue', name: f.superficie, value: m.superficie, unitCode: 'MTK' }],
   },
@@ -39,7 +39,7 @@ const jsonld = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Trazo Fino', item: new URL(url(lang, 'inicio'), Astro.site).href },
+      { '@type': 'ListItem', position: 1, name: 'TRAZOFINO', item: new URL(url(lang, 'inicio'), Astro.site).href },
       { '@type': 'ListItem', position: 2, name: t.nav.modulos, item: new URL(url(lang, 'modulos'), Astro.site).href },
       { '@type': 'ListItem', position: 3, name: nombre },
     ],
@@ -67,7 +67,7 @@ const marcadores = (cat: string) => Array.from({ length: cat === 'exterior' ? 3 
     <div class="contenedor ficha-hero__in">
       <div style="display:grid;gap:1.5rem">
         <nav class="migas" aria-label="Breadcrumb">
-          <a href={url(lang, 'inicio')}>Trazo Fino</a><span aria-hidden="true">/</span>
+          <a href={url(lang, 'inicio')}>TRAZOFINO</a><span aria-hidden="true">/</span>
           <a href={url(lang, 'modulos')}>{t.nav.modulos}</a><span aria-hidden="true">/</span>
           <span aria-current="page">{nombre}</span>
         </nav>

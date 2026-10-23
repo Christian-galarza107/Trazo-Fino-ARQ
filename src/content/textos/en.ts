@@ -4,14 +4,14 @@ import type { Textos } from './es';
 export const en: Textos = {
   meta: {
     inicio: {
-      titulo: 'Trazo Fino Arquitectura · Modular homes',
-      descripcion: 'Architecture for new ways of living. 24 m² and 48 m² modular homes designed and built by Trazo Fino Arquitectura.',
+      titulo: 'TRAZOFINO ARQUITECTURA · Modular homes',
+      descripcion: 'Architecture for new ways of living. 24 m² and 48 m² modular homes designed and built by TRAZOFINO ARQUITECTURA.',
     },
     modulos: { titulo: 'Modular homes · Module S and Module M', descripcion: 'Discover the 24 m² Module S and the 48 m² Module M. Compare them and request a quote.' },
-    proyectos: { titulo: 'Architecture projects', descripcion: 'Architecture project portfolio of the Trazo Fino studio.' },
-    estudio: { titulo: 'Studio', descripcion: 'Trazo Fino Arquitectura: design, construction management and building.' },
+    proyectos: { titulo: 'Architecture projects', descripcion: 'Architecture project portfolio of the TRAZOFINO studio.' },
+    estudio: { titulo: 'Studio', descripcion: 'TRAZOFINO ARQUITECTURA: design, construction management and building.' },
     contacto: { titulo: 'Contact and quotes', descripcion: 'Request a quote for Module S or Module M via form or WhatsApp.' },
-    privacidad: { titulo: 'Privacy policy', descripcion: 'Trazo Fino Arquitectura privacy policy.' },
+    privacidad: { titulo: 'Privacy policy', descripcion: 'TRAZOFINO ARQUITECTURA privacy policy.' },
     noEncontrada: { titulo: 'Page not found', descripcion: 'The page you are looking for does not exist.' },
   },
   nav: {
@@ -51,11 +51,13 @@ export const en: Textos = {
       titulo: 'Architecture for new ways of living.',
       texto: 'We design and build modular homes with an architect’s criteria. Two modules, 24 and 48 m², ready to be lived in.',
       desplazar: 'Scroll',
+      pausar: 'Pause video',
+      reproducir: 'Play video',
     },
     presentacion: {
-      etiqueta: 'Trazo Fino',
+      etiqueta: 'TRAZOFINO',
       titulo: 'An architectural practice, applied to modular living.',
-      texto: 'Trazo Fino is a construction company dedicated to design, construction management and building. We bring that same professional practice to modular homes conceived for clear, simple living.',
+      texto: 'TRAZOFINO is a construction company dedicated to design, construction management and building. We bring that same professional practice to modular homes conceived for clear, simple living.',
     },
     modular: {
       etiqueta: 'Modular homes',
@@ -69,7 +71,7 @@ export const en: Textos = {
     },
     ventajas: {
       etiqueta: 'The approach',
-      titulo: 'Why a Trazo Fino module.',
+      titulo: 'Why a TRAZOFINO module.',
       items: [
         { titulo: 'Architectural design', texto: 'Each module starts from a resolved design: from the outset you know the floor area and proposal you are assessing.' },
         { titulo: 'Two clear sizes', texto: '24 m² and 48 m²: two scales for different needs, directly comparable.' },
@@ -100,7 +102,7 @@ export const en: Textos = {
   modulos: {
     etiqueta: 'Modular homes',
     titulo: 'Module S and Module M.',
-    texto: 'Two modular homes designed by Trazo Fino Arquitectura. Explore each one or compare them.',
+    texto: 'Two modular homes designed by TRAZOFINO ARQUITECTURA. Explore each one or compare them.',
     comparar: {
       titulo: 'Compare modules',
       texto: 'The comparison shows only the confirmed data for each module.',
@@ -151,7 +153,7 @@ export const en: Textos = {
   },
   estudio: {
     etiqueta: 'Studio',
-    titulo: 'Trazo Fino Arquitectura.',
+    titulo: 'TRAZOFINO ARQUITECTURA.',
     texto: 'Construction company dedicated to design, construction management and building.',
     enfoque: {
       titulo: 'Approach',
@@ -178,7 +180,7 @@ export const en: Textos = {
       localidad: 'Approximate project location',
       mensaje: 'Additional message',
       opcional: 'optional',
-      consentimiento: 'I agree that Trazo Fino may use this data to answer my enquiry, as described in the',
+      consentimiento: 'I agree that TRAZOFINO may use this data to answer my enquiry, as described in the',
       privacidad: 'privacy policy',
       enviar: 'Send enquiry',
       enviando: 'Sending…',
@@ -188,12 +190,13 @@ export const en: Textos = {
     estados: {
       ok: 'We received your enquiry and will reply shortly.',
       error: 'We could not send your enquiry. Please try again or message us on WhatsApp.',
+      limite: 'We are receiving many enquiries right now. Please try again in a few minutes or message us on WhatsApp.',
       pendiente: 'Form submission is not enabled yet. You can send this same enquiry via WhatsApp.',
       invalido: 'Please check the highlighted fields.',
     },
     wa: {
-      saludo: 'Hello Trazo Fino, I would like to make an enquiry.',
-      modulo: 'Hello Trazo Fino, I am interested in {modulo}.',
+      saludo: 'Hello TRAZOFINO, I would like to make an enquiry.',
+      modulo: 'Hello TRAZOFINO, I am interested in {modulo}.',
       nombre: 'Name',
       modelo: 'Model',
       localidad: 'Location',
@@ -206,7 +209,7 @@ export const en: Textos = {
     titulo: 'Privacy policy',
     borrador: 'Editable draft. Requires legal review before final publication.',
     parrafos: [
-      'Trazo Fino Arquitectura uses the data you send through the form or WhatsApp (name, email, phone, model of interest, location and message) only to answer your enquiry and prepare a quote.',
+      'TRAZOFINO ARQUITECTURA uses the data you send through the form or WhatsApp (name, email, phone, model of interest, location and message) only to answer your enquiry and prepare a quote.',
       'We do not sell or transfer your data to third parties. Form data is stored in a database service with restricted access.',
       'You may request access to, correction or deletion of your data by contacting us through the channels on this site.',
     ],

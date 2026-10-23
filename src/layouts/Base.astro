@@ -30,7 +30,9 @@ const site = Astro.site!;
 const noindex = p.noindex || !sitio.lanzado;
 const canonical = new URL(Astro.url.pathname, site).href;
 const tituloCompleto = p.titulo.includes(sitio.marca) ? p.titulo : `${p.titulo} · ${sitio.marcaCompleta}`;
-const og = new URL(p.imagenOg ?? '/og.png', site).href;
+const og = new URL(p.imagenOg ?? '/og.jpg', site).href;
+/** JSON para <script type="application/ld+json">: escapa "<" para que ningún texto pueda cerrar la etiqueta. */
+const jsonSeguro = (v: unknown) => JSON.stringify(v).replace(/</g, '\\u003c').replace(/\u2028|\u2029/g, (c) => (c === '\u2028' ? '\\u2028' : '\\u2029'));
 
 const organizacion = {
   '@context': 'https://schema.org',
@@ -38,6 +40,8 @@ const organizacion = {
   name: sitio.marcaCompleta,
   description: sitio.descripcion,
   url: site.href,
+  logo: new URL('/marca/trazofino-isotipo.png', site).href,
+  member: sitio.equipo.map((e) => ({ '@type': 'Person', name: e.nombre.replace(/^Arq\.\s*/, '') })),
   areaServed: { '@type': 'Country', name: 'Argentina' },
   ...(sitio.contacto.telefonoVisible ? { telephone: sitio.contacto.telefonoVisible } : {}),
   ...(sitio.contacto.email ? { email: sitio.contacto.email } : {}),
@@ -58,7 +62,9 @@ const organizacion = {
     <link rel="alternate" hreflang="x-default" href={new URL(p.alternativas.es, site).href} />
     <link rel="preload" href={fuenteTitulos} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#f3efe7" />
     <meta name="format-detection" content="telephone=no" />
@@ -73,7 +79,7 @@ const organizacion = {
     <meta property="og:locale" content={LOCALE[p.lang].replace('-', '_')} />
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline>document.documentElement.classList.add('js')</script>
-    <script type="application/ld+json" set:html={JSON.stringify([organizacion, ...(p.jsonld ?? [])])} />
+    <script type="application/ld+json" set:html={jsonSeguro([organizacion, ...(p.jsonld ?? [])])} />
   </head>
   <body id="arriba">
     <a class="saltar" href="#contenido">{t.nav.saltar}</a>

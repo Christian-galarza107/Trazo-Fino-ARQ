@@ -2,7 +2,7 @@
 Las dos webs se recorrieron con un navegador automatizado en escritorio (1440 px) y en móvil (390 px). Solo se usaron como inspiración de criterios: no se reutilizaron código, textos, fotografías ni composiciones completas.
 
 ## bauwerk-parkett.com (calidad visual)
-| Qué observamos | Cómo lo aplicamos en Trazo Fino |
+| Qué observamos | Cómo lo aplicamos en TRAZOFINO |
 |---|---|
 | Portada a pantalla completa con titular serif centrado y un único botón | Portada con titular serif editorial, texto breve y dos botones discretos |
 | Banda de atributos después de la portada | Sección "Por qué un módulo", con afirmaciones a validar |
@@ -24,7 +24,7 @@ Las dos webs se recorrieron con un navegador automatizado en escritorio (1440 px
 - texto con relieve sobre las fotos;
 - menús con más de 25 enlaces.
 
-## Idea original de Trazo Fino
+## Idea original de TRAZOFINO
 - **En la portada:** las tarjetas de S y M tienen anchos proporcionales a su superficie (1:2).
 - **En el comparador:** las áreas se dibujan a escala (24 m² y 48 m²), sin inventar plantas.
 - **Firma de la marca:** el "trazo fino", una línea de 1 px presente en el logotipo, las etiquetas, los subrayados y los marcadores.

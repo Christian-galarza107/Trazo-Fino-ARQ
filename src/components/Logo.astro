@@ -1,9 +1,18 @@
 ---
-/** Logotipo textual provisional: TRAZO — FINO / ARQUITECTURA. El trazo central es la firma de la marca. */
+/**
+ * Logotipo oficial: isotipo de TRAZOFINO (PNG original, solo sin fondo y optimizado,
+ * ver public/marca/) + nombre institucional TRAZOFINO ARQUITECTURA.
+ */
 interface Props { href: string; etiqueta?: string }
-const { href, etiqueta = 'Trazo Fino Arquitectura, inicio' } = Astro.props;
+const { href, etiqueta = 'TRAZOFINO ARQUITECTURA, inicio' } = Astro.props;
 ---
 <a class="logo" href={href} title={etiqueta}>
-  <span class="logo__marca">TRAZO<span class="logo__trazo"> </span>FINO</span>
-  <span class="logo__sub">ARQUITECTURA</span>
+  <picture class="logo__iso">
+    <source srcset="/marca/trazofino-isotipo.webp" type="image/webp" />
+    <img src="/marca/trazofino-isotipo.png" width="96" height="132" alt="" decoding="async" />
+  </picture>
+  <span class="logo__texto">
+    <span class="logo__marca">TRAZOFINO</span>
+    <span class="logo__sub">ARQUITECTURA</span>
+  </span>
 </a>

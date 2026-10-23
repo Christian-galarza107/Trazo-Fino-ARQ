@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TRAZO FINO — Sistema visual
+   TRAZOFINO — Sistema visual
    Marfil y blanco cálido · grafito y negro suave · piedra, arena y madera.
    Serif editorial para titulares, sans contemporánea para lectura.
    ========================================================================== */
@@ -438,40 +438,48 @@ p {
   padding: 0.45rem var(--margen);
 }
 
-/* ---------- Logotipo textual ---------- */
+/* ---------- Logotipo ---------- */
 .logo {
   display: inline-flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  align-items: center;
+  gap: 0.7rem;
   min-height: 44px;
-  justify-content: center;
   line-height: 1;
 }
-.logo__marca {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--serif);
-  font-size: 1.55rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-}
-.logo__trazo {
+.logo__iso img {
   display: block;
-  width: 1.4rem;
-  height: 1px;
-  background: var(--madera);
-  transition: width var(--medio) var(--curva);
+  width: auto;
+  height: 2.5rem;
 }
-.logo:hover .logo__trazo {
-  width: 2.2rem;
+.logo__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+.logo__marca {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
 }
 .logo__sub {
   font-size: 0.5625rem;
   font-weight: 600;
-  letter-spacing: 0.52em;
+  letter-spacing: 0.5em;
   color: var(--piedra-texto);
-  padding-left: 0.1rem;
+  padding-left: 0.08rem;
+}
+@media (max-width: 389px) {
+  .logo__iso img {
+    height: 2.15rem;
+  }
+  .logo__marca {
+    font-size: 1.25rem;
+    letter-spacing: 0.1em;
+  }
+  .logo__sub {
+    letter-spacing: 0.4em;
+  }
 }
 
 /* ---------- Header ---------- */
@@ -502,9 +510,6 @@ p {
 }
 .header--sobre:not(.con-borde) .logo__sub {
   color: var(--arena);
-}
-.header--sobre:not(.con-borde) .logo__trazo {
-  background: var(--arena);
 }
 .header__in {
   height: 100%;
@@ -1965,4 +1970,123 @@ select.entrada {
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 1px;
+}
+
+/* ---------- Portada con video ---------- */
+.hero__poster,
+.hero__poster img,
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero__video {
+  opacity: 0;
+  transition: opacity 1.2s var(--curva);
+}
+.video-activo .hero__video {
+  opacity: 1;
+}
+/* Contraste del texto sobre el video: velo discreto, más denso abajo a la izquierda */
+.hero::after {
+  background:
+    linear-gradient(180deg, rgb(24 23 21 / 0.5) 0%, rgb(24 23 21 / 0) 26%),
+    linear-gradient(0deg, rgb(24 23 21 / 0.78) 0%, rgb(24 23 21 / 0.25) 45%, rgb(24 23 21 / 0) 70%),
+    linear-gradient(90deg, rgb(24 23 21 / 0.35) 0%, rgb(24 23 21 / 0) 55%);
+}
+.hero__titulo,
+.hero__texto p {
+  text-shadow: 0 1px 24px rgb(0 0 0 / 0.25);
+}
+.hero__rotulo {
+  position: absolute;
+  right: var(--margen);
+  top: calc(var(--header) + 1rem);
+  z-index: 2;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.78);
+}
+.hero__pausa {
+  position: absolute;
+  right: var(--margen);
+  bottom: clamp(1rem, 0.75rem + 1vw, 1.75rem);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid rgb(255 255 255 / 0.45);
+  background: rgb(24 23 21 / 0.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--blanco);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.3s var(--curva),
+    border-color 0.3s var(--curva);
+}
+.hero__pausa:hover {
+  background: rgb(24 23 21 / 0.5);
+  border-color: rgb(255 255 255 / 0.8);
+}
+.hero__pausa-icono {
+  position: relative;
+  width: 10px;
+  height: 12px;
+  border-left: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+}
+.hero__pausa.en-pausa .hero__pausa-icono {
+  border: 0;
+  border-left: 10px solid currentColor;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+@media (max-width: 1023px) {
+  /* en móvil la barra comercial ocupa la base: el botón sube a la esquina superior */
+  .hero__pausa {
+    top: calc(var(--header) + 2.5rem);
+    bottom: auto;
+  }
+  .hero__pausa span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+/* Transición hacia el contenido: el texto de portada se desvanece al hacer scroll */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__contenido {
+      animation: portada-salida linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 70%;
+    }
+    @keyframes portada-salida {
+      to {
+        opacity: 0;
+        transform: translateY(-6vh);
+      }
+    }
+  }
+}
+.hero .etiqueta {
+  color: rgb(255 255 255 / 0.9);
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+}
+/* Títulos con el nombre de la marca (una sola palabra larga): tamaño acotado en pantallas angostas */
+.display--marca {
+  font-size: clamp(2.2rem, 0.9rem + 6.4vw, 7.25rem);
+  overflow-wrap: anywhere;
 }

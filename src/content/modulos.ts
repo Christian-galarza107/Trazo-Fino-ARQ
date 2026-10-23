@@ -2,7 +2,7 @@
  * ============================================================================
  *  MÓDULOS — Módulo S y Módulo M
  *
- *  CONFIRMADO por Trazo Fino: nombre, superficie y categoría.
+ *  CONFIRMADO por TRAZOFINO: nombre, superficie y categoría.
  *  Todo lo demás está vacío o marcado como pendiente. Para agregar un dato:
  *    - Especificación o material: agregá un objeto con `confirmado: true`.
  *    - Imágenes: copiá el archivo en src/assets/media/modulos/<s|m>/<carpeta>/
@@ -25,9 +25,9 @@ export const modulos: Modulo[] = [
       pt: 'Vinte e quatro metros quadrados pensados com critério de arquitetura.',
     },
     descripcion: {
-      es: 'El Módulo S es la vivienda compacta de Trazo Fino: 24 m² para quienes buscan un espacio propio, proyectado con el mismo cuidado que una obra de arquitectura.\n\nTe acompañamos desde la primera consulta para evaluar tu terreno y tus necesidades antes de avanzar.',
-      en: 'Module S is Trazo Fino’s compact home: 24 m² for those looking for a place of their own, designed with the same care as any architectural work.\n\nWe guide you from the first enquiry, assessing your site and needs before moving forward.',
-      pt: 'O Módulo S é a casa compacta da Trazo Fino: 24 m² para quem busca um espaço próprio, projetado com o mesmo cuidado de uma obra de arquitetura.\n\nAcompanhamos você desde a primeira consulta para avaliar seu terreno e suas necessidades antes de avançar.',
+      es: 'El Módulo S es la vivienda compacta de TRAZOFINO: 24 m² para quienes buscan un espacio propio, proyectado con el mismo cuidado que una obra de arquitectura.\n\nTe acompañamos desde la primera consulta para evaluar tu terreno y tus necesidades antes de avanzar.',
+      en: 'Module S is TRAZOFINO’s compact home: 24 m² for those looking for a place of their own, designed with the same care as any architectural work.\n\nWe guide you from the first enquiry, assessing your site and needs before moving forward.',
+      pt: 'O Módulo S é a casa compacta da TRAZOFINO: 24 m² para quem busca um espaço próprio, projetado com o mesmo cuidado de uma obra de arquitetura.\n\nAcompanhamos você desde a primeira consulta para avaliar seu terreno e suas necessidades antes de avançar.',
     },
     // Pendiente: medidas, distribución, sistema constructivo, aberturas, instalaciones, plazos.
     especificaciones: [],
@@ -44,9 +44,9 @@ export const modulos: Modulo[] = [
     seo: {
       titulo: { es: 'Módulo S · Vivienda modular de 24 m²', en: 'Module S · 24 m² modular home', pt: 'Módulo S · Casa modular de 24 m²' },
       descripcion: {
-        es: 'Módulo S de Trazo Fino Arquitectura: vivienda modular compacta de 24 m². Solicitá tu cotización.',
-        en: 'Module S by Trazo Fino Arquitectura: a compact 24 m² modular home. Request a quote.',
-        pt: 'Módulo S da Trazo Fino Arquitectura: casa modular compacta de 24 m². Solicite seu orçamento.',
+        es: 'Módulo S de TRAZOFINO ARQUITECTURA: vivienda modular compacta de 24 m². Solicitá tu cotización.',
+        en: 'Module S by TRAZOFINO ARQUITECTURA: a compact 24 m² modular home. Request a quote.',
+        pt: 'Módulo S da TRAZOFINO ARQUITECTURA: casa modular compacta de 24 m². Solicite seu orçamento.',
       },
     },
   },
@@ -79,9 +79,9 @@ export const modulos: Modulo[] = [
     seo: {
       titulo: { es: 'Módulo M · Vivienda modular de 48 m²', en: 'Module M · 48 m² modular home', pt: 'Módulo M · Casa modular de 48 m²' },
       descripcion: {
-        es: 'Módulo M de Trazo Fino Arquitectura: vivienda modular de 48 m². Solicitá tu cotización.',
-        en: 'Module M by Trazo Fino Arquitectura: a 48 m² modular home. Request a quote.',
-        pt: 'Módulo M da Trazo Fino Arquitectura: casa modular de 48 m². Solicite seu orçamento.',
+        es: 'Módulo M de TRAZOFINO ARQUITECTURA: vivienda modular de 48 m². Solicitá tu cotización.',
+        en: 'Module M by TRAZOFINO ARQUITECTURA: a 48 m² modular home. Request a quote.',
+        pt: 'Módulo M da TRAZOFINO ARQUITECTURA: casa modular de 48 m². Solicite seu orçamento.',
       },
     },
   },

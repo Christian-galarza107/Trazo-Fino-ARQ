@@ -30,12 +30,15 @@ npm run build      # salida en dist/
    | Variable | Valor | Tipo |
    |---|---|---|
    | `NODE_VERSION` | `24` | Texto |
-   | `PUBLIC_SITE_URL` | `https://www.trazofinoarq.com` | Texto |
+   | `PUBLIC_SITE_URL` | `https://trazofinoarq.com` (debe coincidir con el dominio principal) | Texto |
    | `PUBLIC_SITE_LAUNCHED` | `false` (pasar a `true` al lanzar) | Texto |
    | `SUPABASE_URL` | `https://xejncuwncervzxtusqah.supabase.co` | Texto |
    | `SUPABASE_PUBLISHABLE_KEY` | Clave publicable (Supabase → Project Settings → API Keys) | Texto |
+   | `SUPABASE_SECRET_KEY` | Clave secreta (Supabase → API Keys → Secret key). Recomendada; necesaria para la migración 0005. Ver `SEGURIDAD.md` | **Secret** |
    | `PUBLIC_TURNSTILE_SITE_KEY` | Opcional (anti-spam) | Texto |
    | `TURNSTILE_SECRET_KEY` | Opcional (anti-spam) | **Secret** |
+
+   La CSP se genera en el build: si cargás las claves de Turnstile, volvé a desplegar para que la política incluya `challenges.cloudflare.com`.
 
    Sin las variables de Supabase el sitio funciona igual, pero el formulario muestra "envío pendiente de configuración" y ofrece WhatsApp.
 

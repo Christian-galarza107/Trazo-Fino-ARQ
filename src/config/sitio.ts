@@ -9,8 +9,8 @@
 import { SITE_URL } from './dominio.mjs';
 
 export const sitio = {
-  marca: 'Trazo Fino',
-  marcaCompleta: 'Trazo Fino Arquitectura',
+  marca: 'TRAZOFINO',
+  marcaCompleta: 'TRAZOFINO ARQUITECTURA',
   dominio: SITE_URL,
 
   /** Descripción provista por la empresa. */
@@ -37,7 +37,7 @@ export const sitio = {
 
   equipo: [
     {
-      nombre: 'Arq. Sebastián González',
+      nombre: 'Arq. Sebastian Gonzalez',
       /** Rol, biografía y foto: pendientes de información. */
       rol: null as string | null,
       foto: null as string | null,

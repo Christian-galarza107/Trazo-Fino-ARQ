@@ -4,14 +4,14 @@ import type { Textos } from './es';
 export const pt: Textos = {
   meta: {
     inicio: {
-      titulo: 'Trazo Fino Arquitectura · Casas modulares',
-      descripcion: 'Arquitetura para novas formas de habitar. Casas modulares de 24 m² e 48 m² projetadas e construídas pela Trazo Fino Arquitectura.',
+      titulo: 'TRAZOFINO ARQUITECTURA · Casas modulares',
+      descripcion: 'Arquitetura para novas formas de habitar. Casas modulares de 24 m² e 48 m² projetadas e construídas pela TRAZOFINO ARQUITECTURA.',
     },
     modulos: { titulo: 'Casas modulares · Módulo S e Módulo M', descripcion: 'Conheça o Módulo S de 24 m² e o Módulo M de 48 m². Compare e solicite seu orçamento.' },
-    proyectos: { titulo: 'Projetos de arquitetura', descripcion: 'Portfólio de projetos de arquitetura do estúdio Trazo Fino.' },
-    estudio: { titulo: 'Estúdio', descripcion: 'Trazo Fino Arquitectura: projeto, direção e execução de obras.' },
+    proyectos: { titulo: 'Projetos de arquitetura', descripcion: 'Portfólio de projetos de arquitetura do estúdio TRAZOFINO.' },
+    estudio: { titulo: 'Estúdio', descripcion: 'TRAZOFINO ARQUITECTURA: projeto, direção e execução de obras.' },
     contacto: { titulo: 'Contato e orçamentos', descripcion: 'Solicite o orçamento do Módulo S ou do Módulo M por formulário ou WhatsApp.' },
-    privacidad: { titulo: 'Política de privacidade', descripcion: 'Política de privacidade da Trazo Fino Arquitectura.' },
+    privacidad: { titulo: 'Política de privacidade', descripcion: 'Política de privacidade da TRAZOFINO ARQUITECTURA.' },
     noEncontrada: { titulo: 'Página não encontrada', descripcion: 'A página que você procura não existe.' },
   },
   nav: {
@@ -51,11 +51,13 @@ export const pt: Textos = {
       titulo: 'Arquitetura para novas formas de habitar.',
       texto: 'Projetamos e construímos casas modulares com critério de arquitetura. Dois módulos, de 24 e 48 m², para começar a habitar.',
       desplazar: 'Rolar',
+      pausar: 'Pausar vídeo',
+      reproducir: 'Reproduzir vídeo',
     },
     presentacion: {
-      etiqueta: 'Trazo Fino',
+      etiqueta: 'TRAZOFINO',
       titulo: 'Uma prática de arquitetura, aplicada à casa modular.',
-      texto: 'A Trazo Fino é uma construtora dedicada a projeto, direção e execução de obras. Levamos essa mesma prática profissional a casas modulares pensadas para habitar com clareza.',
+      texto: 'A TRAZOFINO é uma construtora dedicada a projeto, direção e execução de obras. Levamos essa mesma prática profissional a casas modulares pensadas para habitar com clareza.',
     },
     modular: {
       etiqueta: 'Casas modulares',
@@ -69,7 +71,7 @@ export const pt: Textos = {
     },
     ventajas: {
       etiqueta: 'A abordagem',
-      titulo: 'Por que um módulo Trazo Fino.',
+      titulo: 'Por que um módulo TRAZOFINO.',
       items: [
         { titulo: 'Projeto de arquitetura', texto: 'Cada módulo parte de um projeto resolvido: desde o início você sabe qual área e qual proposta está avaliando.' },
         { titulo: 'Duas áreas claras', texto: '24 m² e 48 m²: duas escalas para necessidades diferentes, comparáveis de forma direta.' },
@@ -100,7 +102,7 @@ export const pt: Textos = {
   modulos: {
     etiqueta: 'Casas modulares',
     titulo: 'Módulo S e Módulo M.',
-    texto: 'Duas casas modulares projetadas pela Trazo Fino Arquitectura. Explore cada uma ou compare.',
+    texto: 'Duas casas modulares projetadas pela TRAZOFINO ARQUITECTURA. Explore cada uma ou compare.',
     comparar: {
       titulo: 'Comparar módulos',
       texto: 'A comparação mostra apenas os dados confirmados de cada módulo.',
@@ -151,7 +153,7 @@ export const pt: Textos = {
   },
   estudio: {
     etiqueta: 'Estúdio',
-    titulo: 'Trazo Fino Arquitectura.',
+    titulo: 'TRAZOFINO ARQUITECTURA.',
     texto: 'Construtora dedicada a projeto, direção e execução de obras.',
     enfoque: {
       titulo: 'Abordagem',
@@ -178,7 +180,7 @@ export const pt: Textos = {
       localidad: 'Localidade aproximada do projeto',
       mensaje: 'Mensagem adicional',
       opcional: 'opcional',
-      consentimiento: 'Autorizo a Trazo Fino a usar estes dados para responder minha consulta, conforme a',
+      consentimiento: 'Autorizo a TRAZOFINO a usar estes dados para responder minha consulta, conforme a',
       privacidad: 'política de privacidade',
       enviar: 'Enviar consulta',
       enviando: 'Enviando…',
@@ -188,12 +190,13 @@ export const pt: Textos = {
     estados: {
       ok: 'Recebemos sua consulta. Responderemos em breve.',
       error: 'Não foi possível enviar a consulta. Tente novamente ou escreva pelo WhatsApp.',
+      limite: 'Recebemos muitas consultas em pouco tempo. Tente novamente em alguns minutos ou escreva pelo WhatsApp.',
       pendiente: 'O envio pelo formulário ainda não está habilitado. Você pode enviar esta mesma consulta pelo WhatsApp.',
       invalido: 'Revise os campos destacados.',
     },
     wa: {
-      saludo: 'Olá Trazo Fino, gostaria de fazer uma consulta.',
-      modulo: 'Olá Trazo Fino, tenho interesse no {modulo}.',
+      saludo: 'Olá TRAZOFINO, gostaria de fazer uma consulta.',
+      modulo: 'Olá TRAZOFINO, tenho interesse no {modulo}.',
       nombre: 'Nome',
       modelo: 'Modelo',
       localidad: 'Localidade',
@@ -206,7 +209,7 @@ export const pt: Textos = {
     titulo: 'Política de privacidade',
     borrador: 'Rascunho editável. Requer revisão jurídica antes da publicação definitiva.',
     parrafos: [
-      'A Trazo Fino Arquitectura usa os dados enviados pelo formulário ou pelo WhatsApp (nome, e-mail, telefone, modelo de interesse, localidade e mensagem) apenas para responder à sua consulta e preparar um orçamento.',
+      'A TRAZOFINO ARQUITECTURA usa os dados enviados pelo formulário ou pelo WhatsApp (nome, e-mail, telefone, modelo de interesse, localidade e mensagem) apenas para responder à sua consulta e preparar um orçamento.',
       'Não vendemos nem cedemos seus dados a terceiros. Os dados do formulário são armazenados em um serviço de banco de dados com acesso restrito.',
       'Você pode solicitar acesso, retificação ou exclusão dos seus dados pelos canais de contato deste site.',
     ],

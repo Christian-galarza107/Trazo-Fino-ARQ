@@ -1,0 +1,141 @@
+---
+/**
+ * Fondo cinematográfico de la portada.
+ * - El póster (AVIF/WebP, versión vertical en celulares) es la imagen principal de carga y el respaldo.
+ * - El video se elige por JS según la pantalla, se reproduce silenciado y en bucle, y aparece con
+ *   un fundido al empezar. No se carga con "ahorro de datos" ni con "reducir movimiento"
+ *   (queda el póster y el botón permite reproducirlo).
+ * - Botón accesible para pausar y reanudar (WCAG 2.2.2). Se pausa solo al salir de pantalla.
+ */
+import { getImage } from 'astro:assets';
+import { imagen } from '../lib/medios';
+import { textos, tr } from '../lib/i18n';
+import type { Idioma, VideoPortada } from '../lib/tipos';
+
+interface Props { video: VideoPortada; lang: Idioma }
+const { video, lang } = Astro.props;
+const t = textos(lang);
+const MEDIA_MOVIL = '(max-width: 767px) and (orientation: portrait)';
+
+const pe = imagen(video.posterEscritorio)!;
+const pm = imagen(video.posterMovil);
+const anchos = (max: number, lista: number[]) => lista.filter((w) => w <= max).concat(lista.some((w) => w >= max) ? [] : [max]);
+const conjunto = async (src: typeof pe, lista: number[], format: 'avif' | 'webp') =>
+  (await getImage({ src, widths: anchos(src.width, lista), format, quality: format === 'avif' ? 60 : 78 })).srcSet.attribute;
+const escAvif = await conjunto(pe, [640, 1072], 'avif');
+const escWebp = await conjunto(pe, [640, 1072], 'webp');
+const respaldo = await getImage({ src: pe, width: pe.width, format: 'webp', quality: 78 });
+const movAvif = pm ? await conjunto(pm, [404], 'avif') : null;
+const movWebp = pm ? await conjunto(pm, [404], 'webp') : null;
+const rotulo = video.origen === 'render-ia' ? t.aviso.renderIA : video.origen === 'render' ? t.aviso.render : null;
+const textosBoton = { pausar: t.inicio.hero.pausar, reproducir: t.inicio.hero.reproducir };
+---
+<div class="hero__medio" data-portada data-textos={JSON.stringify(textosBoton)}>
+  <picture class="hero__poster">
+    {movAvif && <source media={MEDIA_MOVIL} srcset={movAvif} type="image/avif" />}
+    {movWebp && <source media={MEDIA_MOVIL} srcset={movWebp} type="image/webp" />}
+    <source srcset={escAvif} type="image/avif" sizes="100vw" />
+    <source srcset={escWebp} type="image/webp" sizes="100vw" />
+    <img src={respaldo.src} width={pe.width} height={pe.height} alt={tr(video.posterEscritorio.alt, lang)} loading="eager" fetchpriority="high" decoding="async" style={video.foco ? `object-position:${video.foco}` : undefined} />
+  </picture>
+  <video
+    class="hero__video"
+    muted
+    loop
+    playsinline
+    autoplay
+    preload="none"
+    disablepictureinpicture
+    disableRemotePlayback
+    aria-hidden="true"
+    tabindex="-1"
+    data-video
+    data-escritorio={video.escritorio}
+    data-movil={video.movil ?? undefined}
+    data-escritorio-webm={video.escritorioWebm}
+    data-movil-webm={video.movilWebm}
+    data-media-movil={MEDIA_MOVIL}
+    style={video.foco ? `object-position:${video.foco}` : undefined}
+  ></video>
+</div>
+{rotulo && <span class="hero__rotulo">{rotulo}</span>}
+<button class="hero__pausa" type="button" aria-pressed="false" data-pausa hidden>
+  <span class="hero__pausa-icono" aria-hidden="true"></span>
+  <span data-pausa-texto>{textosBoton.pausar}</span>
+</button>
+
+<script>
+  const cont = document.querySelector<HTMLElement>('[data-portada]');
+  const v = cont?.querySelector<HTMLVideoElement>('[data-video]');
+  const boton = document.querySelector<HTMLButtonElement>('[data-pausa]');
+  const etiqueta = boton?.querySelector<HTMLElement>('[data-pausa-texto]');
+  if (cont && v && boton && etiqueta) {
+    const txt = JSON.parse(cont.dataset.textos!) as { pausar: string; reproducir: string };
+    const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ahorro = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+    let pausadoPorUsuario = reducir || ahorro;
+    let cargado = false;
+
+    const estado = (reproduciendo: boolean) => {
+      boton.setAttribute('aria-pressed', String(!reproduciendo));
+      etiqueta.textContent = reproduciendo ? txt.pausar : txt.reproducir;
+      boton.classList.toggle('en-pausa', !reproduciendo);
+    };
+    const cargar = () => {
+      if (cargado) return;
+      cargado = true;
+      const movil = Boolean(v.dataset.movil) && matchMedia(v.dataset.mediaMovil!).matches;
+      // H.264 (Chrome, Safari, Edge); si el navegador no lo decodifica, WebM VP9.
+      const h264 = v.canPlayType('video/mp4; codecs="avc1.640028"') !== '';
+      const d = v.dataset;
+      const fuente = movil ? (h264 ? d.movil : d.movilWebm ?? d.movil) : h264 ? d.escritorio : d.escritorioWebm ?? d.escritorio;
+      v.src = fuente!;
+      v.load();
+    };
+    const reproducir = () => {
+      cargar();
+      v.muted = true;
+      v.play().catch(() => estado(false)); // autoplay bloqueado: queda el póster y el botón ofrece reproducir
+    };
+
+    v.addEventListener('playing', () => cont.classList.add('video-activo'));
+    // El botón refleja siempre el estado real del video
+    v.addEventListener('play', () => estado(true));
+    v.addEventListener('pause', () => estado(false));
+    v.addEventListener('error', () => {
+      cont.classList.remove('video-activo');
+      boton.hidden = true; // sin video: queda el póster, sin controles inútiles
+    });
+
+    boton.hidden = false;
+    boton.addEventListener('click', () => {
+      if (v.paused) {
+        pausadoPorUsuario = false;
+        reproducir();
+      } else {
+        pausadoPorUsuario = true;
+        v.pause();
+        estado(false);
+      }
+    });
+
+    if (pausadoPorUsuario) {
+      v.removeAttribute('autoplay');
+      estado(false);
+    } else {
+      reproducir();
+    }
+
+    // Ahorro de batería: pausa fuera de pantalla o con la pestaña oculta
+    new IntersectionObserver(([e]) => {
+      if (pausadoPorUsuario || !cargado) return;
+      if (e.isIntersecting && !document.hidden) v.play().catch(() => {});
+      else v.pause();
+    }).observe(cont);
+    document.addEventListener('visibilitychange', () => {
+      if (pausadoPorUsuario || !cargado) return;
+      if (document.hidden) v.pause();
+      else v.play().catch(() => {});
+    });
+  }
+</script>

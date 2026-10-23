@@ -21,7 +21,7 @@ const datos = [
 const portadaImg = imagen(p.portada);
 const jsonld = p.demo
   ? []
-  : [{ '@context': 'https://schema.org', '@type': 'CreativeWork', name: titulo, about: tr(p.resumen, lang), creator: { '@type': 'Organization', name: 'Trazo Fino Arquitectura' }, ...(p.anio ? { dateCreated: String(p.anio) } : {}) }];
+  : [{ '@context': 'https://schema.org', '@type': 'CreativeWork', name: titulo, about: tr(p.resumen, lang), creator: { '@type': 'Organization', name: 'TRAZOFINO ARQUITECTURA' }, ...(p.anio ? { dateCreated: String(p.anio) } : {}) }];
 ---
 <Base lang={lang} titulo={titulo} descripcion={tr(p.resumen, lang)} alternativas={alternativas('proyectos', p.slug)} actual="proyectos" sobreHero imagenOg={portadaImg?.src} jsonld={jsonld} noindex={p.demo}>
   <section class="ficha-hero" aria-labelledby="obra-titulo">

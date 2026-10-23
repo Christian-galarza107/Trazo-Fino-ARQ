@@ -1,6 +1,6 @@
-# Trazo Fino Arquitectura — sitio web oficial
+# TRAZOFINO ARQUITECTURA — sitio web oficial
 
-Sitio comercial de **Trazo Fino Arquitectura** (www.trazofinoarq.com). Su objetivo principal es generar consultas de venta de casas modulares (**Módulo S · 24 m²** y **Módulo M · 48 m²**). También muestra el portafolio del estudio.
+Sitio comercial de **TRAZOFINO ARQUITECTURA** (www.trazofinoarq.com). Su objetivo principal es generar consultas de venta de casas modulares (**Módulo S · 24 m²** y **Módulo M · 48 m²**). También muestra el portafolio del estudio.
 
 - **Tecnologías:** Astro 7 (sitio estático) + TypeScript + CSS propio basado en tokens.
 - **Despliegue:** Cloudflare Pages, con una Pages Function para las consultas.
@@ -16,7 +16,7 @@ Sitio comercial de **Trazo Fino Arquitectura** (www.trazofinoarq.com). Su objeti
 npm install
 npm run dev            # desarrollo en http://localhost:4321
 npm run check          # chequeo de tipos
-npm run build          # producción → dist/
+npm run build          # producción → dist/ (incluye la generación de la CSP con hashes)
 npm run preview        # sirve dist/
 npm run preview:cf     # sirve dist/ con la función /api/consulta (Wrangler)
 npm run media:optimize -- <archivo|carpeta>   # optimiza fotos y videos (ffmpeg para video)
@@ -56,7 +56,7 @@ src/
 functions/api/   consulta.ts → Supabase
 supabase/        Migraciones SQL (esquema, datos confirmados, seguridad)
 public/          favicon, imagen OG, cabeceras de seguridad, video
-docs/            Contenidos, despliegue, Supabase, prompts de imágenes, referencias
+docs/            Contenidos, despliegue, seguridad, Supabase, prompts de imágenes, referencias
 ```
 
 ## Variables de entorno
@@ -78,6 +78,9 @@ Ver `.env.example`. **No hay claves privadas en el repositorio.**
 
 ## Despliegue
 Ver **[docs/DESPLIEGUE.md](docs/DESPLIEGUE.md)**. Cloudflare Pages: preset Astro · rama `main` · `npm run build` · salida `dist`.
+
+## Seguridad
+Ver **[docs/SEGURIDAD.md](docs/SEGURIDAD.md)**: hallazgos, controles aplicados (CSP con hashes, cabeceras, endurecimiento de `/api/consulta`, RLS) y tareas manuales en Supabase y Cloudflare.
 
 ## Calidad medida
 Medido el 22/10/2026 con Lighthouse en móvil, sobre el build local:

@@ -5,6 +5,7 @@ import Titulo from '../components/Titulo.astro';
 import Panorama from '../components/Panorama.astro';
 import Obra from '../components/Obra.astro';
 import Icono from '../components/Icono.astro';
+import VideoPortada from '../components/VideoPortada.astro';
 import { modulos } from '../content/modulos';
 import { portada } from '../content/portada';
 import { imagen } from '../lib/medios';
@@ -34,12 +35,7 @@ const jsonld = [
   <!-- 0. Portada -->
   <section class="hero" aria-labelledby="hero-titulo">
     {portada.video ? (
-      <div class="hero__medio">
-        <video autoplay muted loop playsinline preload="none" poster={portada.video.poster} data-video-hero aria-hidden="true">
-          {portada.video.webm && <source src={portada.video.webm} type="video/webm" />}
-          <source src={portada.video.mp4} type="video/mp4" />
-        </video>
-      </div>
+      <VideoPortada video={portada.video} lang={lang} />
     ) : heroImg ? (
       <div class="hero__medio">
         <Picture src={heroImg} alt={tr(portada.imagen?.alt, lang)} formats={['avif', 'webp']} widths={[800, 1280, 1920, 2560].filter((w) => w <= heroImg.width)} sizes="100vw" loading="eager" fetchpriority="high" />
@@ -52,9 +48,9 @@ const jsonld = [
         <p class="etiqueta" data-revelar>{i.hero.etiqueta}</p>
         <Titulo nivel={1} texto={i.hero.titulo} class="display hero__titulo" id="hero-titulo" />
       </div>
-      <div class="hero__texto" data-revelar style="--d:4">
-        <p>{i.hero.texto}</p>
-        <div class="botones">
+      <div class="hero__texto">
+        <p data-revelar style="--d:4">{i.hero.texto}</p>
+        <div class="botones" data-revelar style="--d:6">
           <a class="boton boton--claro" href={url(lang, 'modulos')}>{t.cta.explorar} <Icono nombre="flecha" /></a>
           <a class="boton boton--linea-claro" href={url(lang, 'proyectos')}>{t.cta.proyectos}</a>
         </div>
@@ -204,17 +200,3 @@ const jsonld = [
     </div>
   </section>
 </Base>
-
-<script>
-  // Video de portada: no se reproduce con ahorro de datos o movimiento reducido (queda el póster).
-  const v = document.querySelector<HTMLVideoElement>('[data-video-hero]');
-  if (v) {
-    const ahorro = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-    if (ahorro || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      v.removeAttribute('autoplay');
-    } else {
-      v.preload = 'auto';
-      v.play().catch(() => {});
-    }
-  }
-</script>

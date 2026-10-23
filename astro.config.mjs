@@ -8,6 +8,8 @@ export default defineConfig({
   trailingSlash: 'always',
   build: { inlineStylesheets: 'auto' },
   image: { responsiveStyles: false },
+  // Sin recursos incrustados como data: (fuentes, imágenes): la CSP no necesita permitir data: fonts.
+  vite: { build: { assetsInlineLimit: 0 } },
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'es', locales: { es: 'es-AR', en: 'en', pt: 'pt-BR' } },
