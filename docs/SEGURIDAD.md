@@ -1,5 +1,5 @@
 # Informe de seguridad — TRAZOFINO ARQUITECTURA
-Fecha: 23/10/2026 · Rama: `mejora/seguridad-identidad-video` · Punto de recuperación: tag `respaldo-2026-10-23` (commit `f5e7a8f`, producción antes de los cambios).
+Fecha: 23/10/2026 · Rama: `mejora/seguridad-identidad-video` · Punto de recuperación: commit `f5e7a8f` (rama `main`, producción antes de los cambios; tag local `respaldo-2026-10-23`).
 
 Cada hallazgo indica cómo se verificó. Lo que no se pudo comprobar se marca **No verificado**.
 
@@ -89,5 +89,5 @@ No existe en este proyecto; quedó para la fase 2. La base ya está preparada pa
 ## 7. Recuperación
 - **Volver el sitio a la versión anterior:**
   - en Cloudflare Pages → Deployments → *Rollback* al despliegue anterior;
-  - o desde Git: `git checkout respaldo-2026-10-23`.
+  - o desde Git: `git checkout f5e7a8f`. `main` no se modificó.
 - **Base de datos:** las migraciones pendientes no se aplicaron, así que no hay nada que revertir.
