@@ -90,4 +90,4 @@ No existe en este proyecto; quedó para la fase 2. La base ya está preparada pa
 - **Volver el sitio a la versión anterior:**
   - en Cloudflare Pages → Deployments → *Rollback* al despliegue anterior;
   - o desde Git: `git checkout f5e7a8f`. `main` no se modificó.
-- **Base de datos:** las migraciones pendientes no se aplicaron, así que no hay nada que revertir.
+- **Base de datos:** las migraciones pendientes no se aplicaron, así que hoy no hay nada que revertir. Si se aplican, cada una tiene su script de reversión en `supabase/rollback/` (`…0004_revertir.sql`, `…0005_revertir.sql`). Revertí primero la 0005 y después la 0004.
