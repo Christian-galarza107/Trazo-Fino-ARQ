@@ -54,13 +54,13 @@ Cloudflare → **Web Analytics → Add site** → elegí el proyecto de Pages.
 1. Cloudflare → **Add a domain** → `trazofinoarq.com` → plan Free.
 2. En tu registrador, reemplazá los **nameservers** por los dos que indica Cloudflare (la propagación puede tardar hasta 24 h).
 3. Pages → proyecto → **Custom domains → Set up a domain**: agregá `www.trazofinoarq.com` y también `trazofinoarq.com`.
-4. **Rules → Redirect Rules → Create** → plantilla "Redirect from root to WWW" (301).
+4. **Rules → Redirect Rules → Create** → plantilla "Redirect from WWW to root" (301). El dominio principal es `trazofinoarq.com`, sin www.
 5. **SSL/TLS** → modo **Full (strict)**. **Edge Certificates** → activá "Always Use HTTPS".
 
 ## 4. Lanzamiento
 1. Aprobá los textos marcados `// BORRADOR` y cargá las imágenes reales (ver `CONTENIDOS.md`).
 2. Cambiá `PUBLIC_SITE_LAUNCHED` a `true` → **Retry deployment**.
-3. Google Search Console → agregá el dominio → enviá `https://www.trazofinoarq.com/sitemap-index.xml`.
+3. Google Search Console → agregá el dominio → enviá `https://trazofinoarq.com/sitemap-index.xml`.
 
 ## Prueba local con la función de consultas
 ```bash
