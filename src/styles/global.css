@@ -1345,6 +1345,16 @@ html.menu-abierto {
 .ficha-hero .hero__medio .medio {
   height: 100%;
 }
+/* Portada vertical en pantallas horizontales: la foto entera, en una columna a la derecha y debajo del encabezado. */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .ficha-hero--vertical .hero__medio {
+    inset: calc(var(--header) + 2.5rem) var(--margen) clamp(2.5rem, 2rem + 4vw, 5rem) auto;
+    aspect-ratio: 9 / 16;
+  }
+  .ficha-hero--vertical .ficha-hero__in {
+    padding-right: calc(var(--margen) + (92svh - var(--header)) * 0.5);
+  }
+}
 .ficha-hero__in {
   padding-block: calc(var(--header) + 3rem) clamp(2.5rem, 2rem + 4vw, 5rem);
   display: grid;
@@ -1743,6 +1753,7 @@ select.entrada {
 .obra {
   display: grid;
   gap: 1.25rem;
+  align-content: start;
 }
 .obra__meta {
   display: flex;
@@ -1790,6 +1801,13 @@ select.entrada {
 @media (min-width: 768px) {
   .galeria-obra {
     grid-template-columns: repeat(12, 1fr);
+  }
+  /* Fotos reales: cada una conserva su proporción (las verticales no se recortan). */
+  .galeria-obra > .medio.galeria-obra__h {
+    grid-column: 1 / -1;
+  }
+  .galeria-obra > .medio.galeria-obra__v {
+    grid-column: span 6;
   }
   .galeria-obra > :nth-child(3n + 1) {
     grid-column: 1 / -1;

@@ -1,15 +1,18 @@
 ---
 import Medio from './Medio.astro';
+import { esVertical } from '../lib/medios';
 import { textos, tr, url } from '../lib/i18n';
 import type { Idioma, Proyecto } from '../lib/tipos';
 interface Props { proyecto: Proyecto; lang: Idioma; ratio?: '4x5' | '3x2'; demora?: number }
 const { proyecto: p, lang, ratio = '3x2', demora = 0 } = Astro.props;
 const t = textos(lang);
 const titulo = tr(p.titulo, lang);
+// Una portada vertical nunca se recorta en horizontal.
+const proporcion = esVertical(p.portada) ? '4x5' : ratio;
 ---
 <article class="obra" data-revelar style={`--d:${demora}`}>
   <a class="obra__medio" href={url(lang, 'proyectos', p.slug)} aria-hidden="true" tabindex="-1">
-    <Medio medio={p.portada} lang={lang} ratio={ratio} rotulo={titulo} tono="piedra" sizes="(min-width: 768px) 55vw, 100vw" />
+    <Medio medio={p.portada} lang={lang} ratio={proporcion} rotulo={titulo} tono="piedra" sizes="(min-width: 768px) 55vw, 100vw" />
     {p.demo && <span class="distintivo">{t.aviso.demo}</span>}
   </a>
   <div class="obra__meta">

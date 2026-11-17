@@ -13,3 +13,9 @@ export function imagen(medio: Medio | null | undefined): ImageMetadata | null {
   if (!mod && import.meta.env.DEV) console.warn(`[medios] No se encontró src/assets/media/${medio.archivo}`);
   return mod?.default ?? null;
 }
+
+/** true si la imagen es más alta que ancha (se muestra sin recortarla en horizontal). */
+export function esVertical(medio: Medio | null | undefined): boolean {
+  const img = imagen(medio);
+  return !!img && img.height > img.width;
+}
