@@ -9,9 +9,9 @@
 import type { Medio, VideoPortada } from '../lib/tipos';
 
 const altPortada = {
-  es: 'Vivienda modular con revestimiento negro y madera, galería con deck y jardín, al atardecer',
-  en: 'Modular home with black and timber cladding, deck porch and garden at golden hour',
-  pt: 'Casa modular com revestimento preto e madeira, varanda com deck e jardim ao entardecer',
+  es: 'Vivienda de dos plantas con torre revestida en piedra, fachada gris y blanca, jardín y acceso de adoquines, al atardecer',
+  en: 'Two-storey house with a stone-clad tower, grey and white facade, garden and cobblestone driveway at sunset',
+  pt: 'Casa de dois pavimentos com torre revestida em pedra, fachada cinza e branca, jardim e acesso de paralelepípedos ao entardecer',
 };
 
 export const portada: {
@@ -22,18 +22,18 @@ export const portada: {
   cierre: Medio | null;
 } = {
   /**
-   * Video generado con Google Flow (render ilustrativo, no es una obra construida).
-   * Preparado desde el original de 1280×720: recorte de franjas negras laterales, sin audio,
-   * bucle ida y vuelta de 16 s, H.264 + WebM VP9. Escritorio 1072×716 · celular vertical 404×716.
+   * Video de obra entregado por estudio TF (24/11/2026, original 848×478, 10 s).
+   * Preparado sin audio, bucle ida y vuelta de 20 s, H.264 + WebM VP9.
+   * Escritorio 848×478 · celular vertical 270×478 (recorte central). Pedir el original en mayor resolución.
    */
   video: {
     escritorio: '/media/video/portada-escritorio.mp4',
     movil: '/media/video/portada-movil.mp4',
     escritorioWebm: '/media/video/portada-escritorio.webm',
     movilWebm: '/media/video/portada-movil.webm',
-    posterEscritorio: { archivo: 'portada/poster-escritorio.jpg', alt: altPortada, origen: 'render-ia' },
-    posterMovil: { archivo: 'portada/poster-movil.jpg', alt: altPortada, origen: 'render-ia' },
-    origen: 'render-ia',
+    posterEscritorio: { archivo: 'portada/poster-escritorio.jpg', alt: altPortada, origen: 'fotografia' },
+    posterMovil: { archivo: 'portada/poster-movil.jpg', alt: altPortada, origen: 'fotografia' },
+    origen: 'fotografia',
   },
   // Ejemplo: { archivo: 'portada/hero.jpg', alt: { es: '…' }, origen: 'fotografia' }
   imagen: null,
