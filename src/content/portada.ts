@@ -22,7 +22,7 @@ export const portada: {
   cierre: Medio | null;
 } = {
   /**
-   * Video de obra entregado por estudio TF (24/11/2026, original 848×478, 10 s).
+   * Video generado con Gemini Pro (render ilustrativo, no es una obra construida), entregado el 24/11/2026 (848×478, 10 s).
    * Preparado sin audio, bucle ida y vuelta de 20 s, H.264 + WebM VP9.
    * Escritorio 848×478 · celular vertical 270×478 (recorte central). Pedir el original en mayor resolución.
    */
@@ -31,9 +31,9 @@ export const portada: {
     movil: '/media/video/portada-movil.mp4',
     escritorioWebm: '/media/video/portada-escritorio.webm',
     movilWebm: '/media/video/portada-movil.webm',
-    posterEscritorio: { archivo: 'portada/poster-escritorio.jpg', alt: altPortada, origen: 'fotografia' },
-    posterMovil: { archivo: 'portada/poster-movil.jpg', alt: altPortada, origen: 'fotografia' },
-    origen: 'fotografia',
+    posterEscritorio: { archivo: 'portada/poster-escritorio.jpg', alt: altPortada, origen: 'render-ia' },
+    posterMovil: { archivo: 'portada/poster-movil.jpg', alt: altPortada, origen: 'render-ia' },
+    origen: 'render-ia',
   },
   // Ejemplo: { archivo: 'portada/hero.jpg', alt: { es: '…' }, origen: 'fotografia' }
   imagen: null,
