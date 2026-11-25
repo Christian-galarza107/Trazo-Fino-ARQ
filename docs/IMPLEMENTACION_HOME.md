@@ -69,3 +69,5 @@ Medido comparando lado a lado con la referencia en 1440 px. La spec manda que la
   - El rótulo "Render ilustrativo generado con IA" sobre el video (prop `sinRotulo` de `VideoPortada`). En `portada.ts` el origen sigue registrado como `render-ia`.
 - **Pausa:** el botón rectangular se reemplazó por un control circular mínimo, solo ícono, abajo a la derecha. El área táctil es de 44 px y la etiqueta accesible ("Pausar video" / "Reproducir video") se lee pero no se ve. Se mantiene por accesibilidad (WCAG 2.2.2).
 - **Sin cambios:** el video, su calidad y su reproducción (en silencio, en bucle, `playsinline`, con póster) no se modificaron.
+
+- **Origen del video (aclarado por el usuario):** es una vivienda real construida por TRAZOFINO. Gemini solo animó sus fotos. Por eso no hace falta el rótulo de render en la Home.

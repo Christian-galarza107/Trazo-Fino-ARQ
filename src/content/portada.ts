@@ -22,7 +22,8 @@ export const portada: {
   cierre: Medio | null;
 } = {
   /**
-   * Video generado con Gemini Pro (render ilustrativo, no es una obra construida).
+   * Video animado con Gemini Pro a partir de fotos reales de una vivienda construida por TRAZOFINO
+   * (la obra existe; la IA solo generó el movimiento). Origen técnico: render-ia.
    * Fuente: la copia recibida por WhatsApp el 24/11/2026 (848×478, H.264, 1,6 Mbps, 10 s), elegida por el usuario.
    * Respaldo sin tocar: docs/medios-originales/portada-video-gemini-via-whatsapp-2026-11-24.mp4
    * portada.mp4: el MISMO flujo H.264, sin recomprimir (solo sin audio y con faststart).
