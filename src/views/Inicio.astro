@@ -25,7 +25,6 @@ const h = home;
 const wa = whatsapp(t.contacto.wa.saludo);
 const obras = proyectosVisibles().filter((p) => p.portada);
 const video = portada.video;
-const rotuloVideo = video?.origen === 'render-ia' ? t.aviso.renderIA : video?.origen === 'render' ? t.aviso.render : null;
 const enlacesCaminos = [url(lang, 'modulos'), url(lang, 'proyectos'), '#servicios'];
 const jsonld = [
   {
@@ -38,16 +37,13 @@ const jsonld = [
 ---
 <Base lang={lang} titulo={t.meta.inicio.titulo} descripcion={t.meta.inicio.descripcion} alternativas={alternativas('inicio')} actual="inicio" jsonld={jsonld}>
   <!-- 2. Hero: Nuevas formas de habitar -->
-  <section class:list={['tf-hero', { 'en-video': video }]} aria-labelledby="hero-titulo" aria-roledescription="carousel" aria-label={tr(h.hero.carrusel, lang)} data-hero>
-    {/* Diapositiva 01: el video de portada (fondo audiovisual). 02–04: marcadores hasta tener imágenes aprobadas. */}
-    {video && <VideoPortada video={video} lang={lang} />}
-    <div class="tf-hero__diapos">
-      {[1, 2, 3, 4].map((n) => (
-        <div class:list={['tf-hero__diapo', { activa: n === 1 }]} data-diapo data-con-medio={n === 1 && video ? '' : undefined} role="group" aria-roledescription="slide" aria-label={`${tr(h.hero.diapositiva, lang)} 0${n} / 04`} aria-hidden={n === 1 ? undefined : 'true'}>
-          {!(n === 1 && video) && <Provisorio codigo={`TF-HER-0${n}`} lang={lang} tono="oscuro" />}
-        </div>
-      ))}
-    </div>
+  <section class="tf-hero" aria-labelledby="hero-titulo" data-hero>
+    {/* Fondo audiovisual: el video de portada. Sin video, un marcador hasta tener la imagen aprobada. */}
+    {video ? (
+      <VideoPortada video={video} lang={lang} sinRotulo />
+    ) : (
+      <div class="tf-hero__fondo"><Provisorio codigo="TF-HER-01" lang={lang} tono="oscuro" /></div>
+    )}
     <div class="tf-contenedor tf-hero__in">
       <p class="tf-sobre tf-sobre--claro">{tr(h.hero.etiqueta, lang)}</p>
       <h1 class="tf-hero__titulo" id="hero-titulo">{tr(h.hero.titulo, lang)}</h1>
@@ -57,30 +53,7 @@ const jsonld = [
         <a class="tf-btn tf-btn--borde-claro" href={url(lang, 'proyectos')}>{tr(h.hero.proyectos, lang)}<IconoLinea nombre="flecha" /></a>
       </div>
     </div>
-    <div class="tf-contenedor tf-hero__pie">
-      <div class="tf-hero__indicadores" role="group" aria-label={tr(h.hero.carrusel, lang)}>
-        {[1, 2, 3, 4].map((n) => (
-          <button type="button" data-ir={n - 1} aria-label={`${tr(h.hero.diapositiva, lang)} 0${n}`} aria-current={n === 1 ? 'true' : undefined}>0{n}</button>
-        ))}
-      </div>
-      {video && (
-        <button type="button" class="tf-hero__video" data-abrir-video aria-haspopup="dialog">
-          <span class="tf-hero__play"><IconoLinea nombre="play" /></span>{tr(h.hero.video, lang)}
-        </button>
-      )}
-    </div>
   </section>
-
-  {video && (
-    <dialog class="tf-video" data-video-dialogo aria-label={tr(h.hero.video, lang)}>
-      <button type="button" class="tf-video__cerrar" data-cerrar-video aria-label={tr(h.hero.cerrarVideo, lang)}><IconoLinea nombre="cerrar" /></button>
-      <video controls playsinline loop muted preload="none" data-video>
-        {video.escritorioWebm && <source src={video.escritorioWebm} type="video/webm" />}
-        <source src={video.escritorio} type="video/mp4" />
-      </video>
-      {rotuloVideo && <p class="tf-video__rotulo">{rotuloVideo}</p>}
-    </dialog>
-  )}
 
   <!-- 3. Tu hogar, más cerca -->
   <section class="tf-hogar" aria-labelledby="hogar-titulo">
@@ -252,58 +225,6 @@ const jsonld = [
 
 <script>
   const reducido = matchMedia('(prefers-reduced-motion: reduce)');
-
-  // Hero: carrusel de 4 diapositivas (fundido cada 7 s; pausa con mouse, foco, fuera de pantalla y movimiento reducido).
-  const hero = document.querySelector<HTMLElement>('[data-hero]');
-  if (hero) {
-    const diapos = [...hero.querySelectorAll<HTMLElement>('[data-diapo]')];
-    const botones = [...hero.querySelectorAll<HTMLButtonElement>('[data-ir]')];
-    let actual = 0;
-    let timer = 0;
-    let visible = true;
-    let pausado = false;
-    // Solo rotan solas las diapositivas con un medio real (no los marcadores provisorios).
-    const conMedio = diapos.map((d, i) => (d.hasAttribute('data-con-medio') ? i : -1)).filter((i) => i >= 0);
-    const ir = (n: number) => {
-      actual = (n + diapos.length) % diapos.length;
-      diapos.forEach((d, i) => {
-        d.classList.toggle('activa', i === actual);
-        d.toggleAttribute('aria-hidden', i !== actual);
-      });
-      hero.classList.toggle('en-video', actual === 0 && conMedio.includes(0));
-      botones.forEach((b, i) => (i === actual ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
-    };
-    const siguiente = () => {
-      const k = conMedio.indexOf(actual);
-      ir(conMedio[(k + 1) % conMedio.length]);
-    };
-    const programar = () => {
-      clearInterval(timer);
-      if (conMedio.length > 1 && !reducido.matches && visible && !pausado) timer = window.setInterval(siguiente, 7000);
-    };
-    botones.forEach((b, i) => b.addEventListener('click', () => { ir(i); programar(); }));
-    hero.addEventListener('mouseenter', () => { pausado = true; programar(); });
-    hero.addEventListener('mouseleave', () => { pausado = false; programar(); });
-    hero.addEventListener('focusin', () => { pausado = true; programar(); });
-    hero.addEventListener('focusout', () => { pausado = false; programar(); });
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; programar(); }).observe(hero);
-    reducido.addEventListener('change', programar);
-    programar();
-  }
-
-  // "Ver video": diálogo modal accesible (Esc cierra; el foco vuelve al botón).
-  const dialogo = document.querySelector<HTMLDialogElement>('[data-video-dialogo]');
-  const abrir = document.querySelector<HTMLButtonElement>('[data-abrir-video]');
-  if (dialogo && abrir) {
-    const video = dialogo.querySelector<HTMLVideoElement>('[data-video]')!;
-    abrir.addEventListener('click', () => {
-      dialogo.showModal();
-      video.play().catch(() => {});
-    });
-    dialogo.querySelector('[data-cerrar-video]')!.addEventListener('click', () => dialogo.close());
-    dialogo.addEventListener('click', (e) => e.target === dialogo && dialogo.close());
-    dialogo.addEventListener('close', () => { video.pause(); abrir.focus(); });
-  }
 
   // Carrusel de proyectos: scroll-snap con flechas y teclado.
   document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((c) => {

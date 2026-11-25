@@ -29,10 +29,6 @@ export const home = {
     },
     modulos: { es: 'Conocé los módulos', en: 'Discover the modules', pt: 'Conheça os módulos' },
     proyectos: { es: 'Ver proyectos', en: 'View projects', pt: 'Ver projetos' },
-    video: { es: 'Ver video', en: 'Watch video', pt: 'Ver vídeo' },
-    cerrarVideo: { es: 'Cerrar video', en: 'Close video', pt: 'Fechar vídeo' },
-    diapositiva: { es: 'Diapositiva', en: 'Slide', pt: 'Slide' },
-    carrusel: { es: 'Imágenes de portada', en: 'Cover images', pt: 'Imagens de capa' },
   },
 
   hogar: {

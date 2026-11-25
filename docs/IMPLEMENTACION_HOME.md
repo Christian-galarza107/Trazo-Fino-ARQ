@@ -61,3 +61,11 @@ Medido comparando lado a lado con la referencia en 1440 px. La spec manda que la
   - Título: ≥ 4,8:1 en escritorio y ≥ 3,9:1 en 360 px. El mínimo para texto grande es 3:1.
   - Bajada: ≥ 6,7:1. El mínimo es 4,5:1.
 - **Carga:** el LCP es el póster (204 ms en local). El video (2,0 MB) se pide después, por JS.
+
+## Limpieza del hero (25/11/2026, a pedido del usuario)
+- **Quitados:**
+  - El botón y el diálogo "Ver video".
+  - Los indicadores 01–04 y las diapositivas provisorias 02–04, con su script de carrusel. El hero queda con un solo fondo: el video.
+  - El rótulo "Render ilustrativo generado con IA" sobre el video (prop `sinRotulo` de `VideoPortada`). En `portada.ts` el origen sigue registrado como `render-ia`.
+- **Pausa:** el botón rectangular se reemplazó por un control circular mínimo, solo ícono, abajo a la derecha. El área táctil es de 44 px y la etiqueta accesible ("Pausar video" / "Reproducir video") se lee pero no se ve. Se mantiene por accesibilidad (WCAG 2.2.2).
+- **Sin cambios:** el video, su calidad y su reproducción (en silencio, en bucle, `playsinline`, con póster) no se modificaron.

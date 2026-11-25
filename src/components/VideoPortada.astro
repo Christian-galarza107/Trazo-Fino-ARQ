@@ -12,8 +12,8 @@ import { imagen } from '../lib/medios';
 import { textos, tr } from '../lib/i18n';
 import type { Idioma, VideoPortada } from '../lib/tipos';
 
-interface Props { video: VideoPortada; lang: Idioma }
-const { video, lang } = Astro.props;
+interface Props { video: VideoPortada; lang: Idioma; /** Oculta el rótulo de origen sobre el video (decisión del usuario para la Home). */ sinRotulo?: boolean }
+const { video, lang, sinRotulo = false } = Astro.props;
 const t = textos(lang);
 const MEDIA_MOVIL = '(max-width: 767px) and (orientation: portrait)';
 
@@ -27,7 +27,7 @@ const escWebp = await conjunto(pe, [640, 1072], 'webp');
 const respaldo = await getImage({ src: pe, width: pe.width, format: 'webp', quality: 78 });
 const movAvif = pm ? await conjunto(pm, [404], 'avif') : null;
 const movWebp = pm ? await conjunto(pm, [404], 'webp') : null;
-const rotulo = video.origen === 'render-ia' ? t.aviso.renderIA : video.origen === 'render' ? t.aviso.render : null;
+const rotulo = sinRotulo ? null : video.origen === 'render-ia' ? t.aviso.renderIA : video.origen === 'render' ? t.aviso.render : null;
 const textosBoton = { pausar: t.inicio.hero.pausar, reproducir: t.inicio.hero.reproducir };
 ---
 <div class="hero__medio" data-portada data-textos={JSON.stringify(textosBoton)}>
