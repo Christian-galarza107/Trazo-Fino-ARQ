@@ -110,7 +110,7 @@ Variantes: sufijo `-M` para un recorte móvil propio (`TF-HER-01-M`) y `_v2`, `_
 | `TF-HER-02` | —                                      | —                    | 2 Hero, diapositiva 02    | S o M      | frontal   | 2560 × 1440 + 1080 × 1920                                                               | pendiente             | a definir              |
 | `TF-HER-03` | —                                      | —                    | 2 Hero, diapositiva 03    | S o M      | aérea     | 2560 × 1440 + 1080 × 1920                                                               | pendiente             | a definir              |
 | `TF-HER-04` | —                                      | —                    | 2 Hero, diapositiva 04    | —          | frontal   | 2560 × 1440 + 1080 × 1920 (puede ser una obra real a medida)                            | pendiente             | a definir              |
-| `TF-HER-V1` | portada-escritorio/movil.mp4/.webm     | Google Flow          | 2 Hero, botón "Ver video" | —          | lateral   | Ideal 1920 × 1080 o más. **Hoy: 1072 × 716**                                            | aprobado (provisorio) | imagen generada con IA |
+| `TF-HER-V1` | portada.mp4 / portada.webm | Gemini Pro (copia recibida por WhatsApp el 24/11/2026; respaldo en `docs/medios-originales/`) | 2 Hero: fondo de la diapositiva 01 y botón "Ver video" | — | frontal | Ideal 1920 × 1080 o más. **Hoy: 848 × 478** (pedir el original de Gemini) | aprobado (provisorio, elegido por el usuario) | imagen generada con IA |
 
 ### 4.3 Módulo S — 24 m² (03)
 

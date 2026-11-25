@@ -9,6 +9,7 @@ import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import IconoLinea from '../components/IconoLinea.astro';
 import Provisorio from '../components/Provisorio.astro';
+import VideoPortada from '../components/VideoPortada.astro';
 import { home, lineas } from '../content/home';
 import { modulos } from '../content/modulos';
 import { portada } from '../content/portada';
@@ -37,11 +38,13 @@ const jsonld = [
 ---
 <Base lang={lang} titulo={t.meta.inicio.titulo} descripcion={t.meta.inicio.descripcion} alternativas={alternativas('inicio')} actual="inicio" jsonld={jsonld}>
   <!-- 2. Hero: Nuevas formas de habitar -->
-  <section class="tf-hero" aria-labelledby="hero-titulo" aria-roledescription="carousel" aria-label={tr(h.hero.carrusel, lang)} data-hero>
+  <section class:list={['tf-hero', { 'en-video': video }]} aria-labelledby="hero-titulo" aria-roledescription="carousel" aria-label={tr(h.hero.carrusel, lang)} data-hero>
+    {/* Diapositiva 01: el video de portada (fondo audiovisual). 02–04: marcadores hasta tener imágenes aprobadas. */}
+    {video && <VideoPortada video={video} lang={lang} />}
     <div class="tf-hero__diapos">
       {[1, 2, 3, 4].map((n) => (
-        <div class:list={['tf-hero__diapo', { activa: n === 1 }]} data-diapo role="group" aria-roledescription="slide" aria-label={`${tr(h.hero.diapositiva, lang)} 0${n} / 04`} aria-hidden={n === 1 ? undefined : 'true'}>
-          <Provisorio codigo={`TF-HER-0${n}`} lang={lang} tono="oscuro" />
+        <div class:list={['tf-hero__diapo', { activa: n === 1 }]} data-diapo data-con-medio={n === 1 && video ? '' : undefined} role="group" aria-roledescription="slide" aria-label={`${tr(h.hero.diapositiva, lang)} 0${n} / 04`} aria-hidden={n === 1 ? undefined : 'true'}>
+          {!(n === 1 && video) && <Provisorio codigo={`TF-HER-0${n}`} lang={lang} tono="oscuro" />}
         </div>
       ))}
     </div>
@@ -259,17 +262,24 @@ const jsonld = [
     let timer = 0;
     let visible = true;
     let pausado = false;
+    // Solo rotan solas las diapositivas con un medio real (no los marcadores provisorios).
+    const conMedio = diapos.map((d, i) => (d.hasAttribute('data-con-medio') ? i : -1)).filter((i) => i >= 0);
     const ir = (n: number) => {
       actual = (n + diapos.length) % diapos.length;
       diapos.forEach((d, i) => {
         d.classList.toggle('activa', i === actual);
         d.toggleAttribute('aria-hidden', i !== actual);
       });
+      hero.classList.toggle('en-video', actual === 0 && conMedio.includes(0));
       botones.forEach((b, i) => (i === actual ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
+    };
+    const siguiente = () => {
+      const k = conMedio.indexOf(actual);
+      ir(conMedio[(k + 1) % conMedio.length]);
     };
     const programar = () => {
       clearInterval(timer);
-      if (!reducido.matches && visible && !pausado) timer = window.setInterval(() => ir(actual + 1), 7000);
+      if (conMedio.length > 1 && !reducido.matches && visible && !pausado) timer = window.setInterval(siguiente, 7000);
     };
     botones.forEach((b, i) => b.addEventListener('click', () => { ir(i); programar(); }));
     hero.addEventListener('mouseenter', () => { pausado = true; programar(); });

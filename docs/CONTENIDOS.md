@@ -58,26 +58,30 @@ Astro genera automáticamente versiones AVIF y WebP en 480, 800, 1200, 1600 y 24
 **Proporciones recomendadas:** portada de módulo 16:9 horizontal (se recorta en celular), galería 16:9, tarjetas 4:5 (S) y 3:2 (M), plano cuadrado o libre.
 
 ## Video de portada
-El video actual es un render de Google Flow, rotulado en el sitio como "Render ilustrativo generado con IA". Su configuración está en `src/content/portada.ts`:
+Es el fondo de la diapositiva 01 del hero. El video actual fue generado con Gemini Pro y se rotula en el sitio como "Render ilustrativo generado con IA". Se configura en `src/content/portada.ts`:
 
-| Archivo | Uso | Tamaño |
+| Archivo | Uso | Detalle |
 |---|---|---|
-| `public/media/video/portada-escritorio.mp4` | H.264, 1072×716, escritorio y tablet | 2,5 MB |
-| `public/media/video/portada-escritorio.webm` | VP9, para navegadores sin H.264 | 2,8 MB |
-| `public/media/video/portada-movil.mp4` | H.264, 404×716 vertical, celulares | 0,85 MB |
-| `public/media/video/portada-movil.webm` | VP9 vertical | 0,77 MB |
-| `src/assets/media/portada/poster-*.jpg` | Pósters (se publican en AVIF/WebP) | — |
+| `public/media/video/portada.mp4` | Fondo del hero y diálogo "Ver video" | **El mismo flujo H.264 del archivo recibido, sin recomprimir**: 848×478, 24 fps, 1,6 Mbps, 10 s, 2,0 MB. Solo se quitó el audio y se agregó `faststart` |
+| `public/media/video/portada.webm` | Solo para navegadores sin H.264 | VP9, `-crf 18 -b:v 0`, misma resolución, sin filtros, 2,6 MB |
+| `src/assets/media/portada/poster-escritorio.jpg` | Póster mientras carga (se publica en AVIF/WebP) | Primer fotograma del mismo video |
+| `docs/medios-originales/portada-video-gemini-via-whatsapp-2026-11-24.mp4` | **Respaldo intacto del archivo recibido** | No se publica |
 
-Para reemplazarlo:
-1. Partí del MP4 original y repetí el proceso documentado en `portada.ts`: recorte de franjas, sin audio, bucle ida y vuelta, H.264 + VP9 y póster del primer cuadro.
-2. Como alternativa rápida, usá `npm run media:optimize -- video.mp4`.
+Comandos usados:
+```bash
+ffmpeg -i original.mp4 -map 0:v:0 -c:v copy -an -movflags +faststart public/media/video/portada.mp4
+ffmpeg -i original.mp4 -map 0:v:0 -an -c:v libvpx-vp9 -b:v 0 -crf 18 -row-mt 1 -deadline good -cpu-used 1 public/media/video/portada.webm
+ffmpeg -i original.mp4 -frames:v 1 -q:v 1 src/assets/media/portada/poster-escritorio.jpg
+```
+
+**Para reemplazarlo:** usá el archivo descargado **directamente de Gemini**, no el que pasó por WhatsApp (WhatsApp lo baja a 848×478). Repetí los tres comandos de arriba. Si el original es H.264 en MP4, no hace falta recomprimirlo.
 
 Cómo se comporta el video:
-- El póster es la imagen principal de carga.
-- El video aparece con un fundido cuando empieza a reproducirse.
-- Hay un botón accesible para pausarlo.
-- Se pausa solo al salir de pantalla.
+- El póster es lo primero que se muestra.
+- El video se carga después, aparece con un fundido y se reproduce en silencio, en bucle y con `playsinline`.
+- Hay un botón accesible para pausarlo, y se pausa solo al salir de pantalla.
 - No se carga con "ahorro de datos" ni con "reducir movimiento".
+- En celulares se usa el mismo archivo, encuadrado por el navegador; no hay un recorte propio.
 
 ## Proyectos
 Copiá el ejemplo comentado de `src/content/proyectos.ts`, completalo y poné `publicado: true`. Los proyectos de `demostraciones` solo se ven con `PUBLIC_MOSTRAR_DEMOS=true`, siempre rotulados, y nunca se publican.

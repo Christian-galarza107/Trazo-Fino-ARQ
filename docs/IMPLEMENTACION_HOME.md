@@ -15,7 +15,7 @@ Rama: `diseno/experiencia-web`. Implementa `TRAZOFINO_DESIGN_SPEC.md` con la dec
 ## Imágenes
 - **Con marcador provisorio:** `TF-HER-01…04`, `TF-MOD-M-03`, `TF-SRV-01…03`, `TF-MOD-S-01`, `TF-MOD-M-01`, `TF-ISO-01…03` y `TF-CIE-01`. Ninguna está aprobada en la biblioteca.
 - **Con foto real:** el carrusel de proyectos usa las portadas aprobadas `TF-PRY-V01…V04-01`. La portada vertical de la Vivienda 02 se muestra entera, sin recortarla en horizontal.
-- **Video:** el video existente (Gemini, rotulado como IA) solo se ve dentro del diálogo "Ver video".
+- **Video:** desde el 25/11, el video de Gemini es el fondo de la diapositiva 01 (ver abajo). También se abre a pantalla completa con "Ver video".
 
 ## Ajustes respecto de la spec, por fidelidad a la referencia
 Medido comparando lado a lado con la referencia en 1440 px. La spec manda que la imagen es la fuente de verdad.
@@ -42,3 +42,22 @@ Medido comparando lado a lado con la referencia en 1440 px. La spec manda que la
   - El ítem "Servicios" lleva a la sección.
 - **Anchos:** sin desbordes horizontales en 360, 390, 430, 768, 1024, 1280, 1440 y 1920 px.
 - **Además:** se corrigió el título de Estudio, que se cortaba a mitad de palabra en escritorio (el problema ya existía antes).
+
+## Video de fondo del hero (25/11/2026)
+- **Archivo:** el elegido por el usuario es la copia de WhatsApp (848×478, H.264 High, 24 fps, 1,6 Mbps, 10 s, 2,16 MB). El original de 1280×720 de esa toma no está disponible. En Drive hay otro original de Gemini (`gemini_generated_video_bb300bad.mp4`, 1280×720, 3,9 Mbps), pero es otra toma, con canteros de tierra.
+- **Por qué perdía calidad antes:**
+  1. WhatsApp reduce el video a 848×478 y 1,6 Mbps.
+  2. La versión anterior además se **recomprimía** (bucle ida y vuelta, `crf 22`, ~1 Mbps): una segunda pérdida.
+  3. En celular se usaba un recorte de **270 px** de ancho, ampliado ~4×.
+  4. A pantalla completa en 1440–1920 px, el navegador amplía cualquier video de 848 px entre 1,7× y 2,3×.
+- **Qué se hizo:**
+  - **MP4:** el flujo de video original sin recomprimir. El MD5 del flujo y el PSNR (infinito) confirman que es idéntico al original.
+  - **WebM VP9:** respaldo para navegadores sin H.264. PSNR mediano de 46 dB contra el original.
+  - **Sin filtros ni bucle ida y vuelta:** se repite el mismo video.
+  - **Celular:** el mismo archivo encuadrado con `object-fit: cover`.
+  - **Rotación:** el carrusel ya no avanza solo hacia los marcadores. Solo rotan las diapositivas con un medio real; hoy hay solo el video, así que queda fija.
+  - **Velo:** en pantallas de menos de 768 px es parejo, para mantener el contraste.
+- **Contraste medido** (fondo más claro detrás del texto, en 4 momentos del video):
+  - Título: ≥ 4,8:1 en escritorio y ≥ 3,9:1 en 360 px. El mínimo para texto grande es 3:1.
+  - Bajada: ≥ 6,7:1. El mínimo es 4,5:1.
+- **Carga:** el LCP es el póster (204 ms en local). El video (2,0 MB) se pide después, por JS.

@@ -379,6 +379,45 @@ body {
     linear-gradient(90deg, rgb(12 11 8 / 0.72) 0%, rgb(12 11 8 / 0.35) 45%, rgb(12 11 8 / 0) 75%),
     linear-gradient(0deg, rgb(12 11 8 / 0.45) 0%, rgb(12 11 8 / 0) 30%);
 }
+/* Video de fondo (diapositiva 01): rótulo IA y botón de pausa arriba a la derecha, solo mientras se ve el video. */
+.tf-hero::after {
+  pointer-events: none;
+}
+.tf-hero .hero__rotulo {
+  top: 1.25rem;
+  right: var(--tf-m);
+}
+.tf-hero .hero__pausa {
+  top: 2.75rem;
+  bottom: auto;
+  right: var(--tf-m);
+}
+.tf-hero .hero__rotulo,
+.tf-hero .hero__pausa {
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s;
+}
+.tf-hero:not(.en-video) .hero__rotulo,
+.tf-hero:not(.en-video) .hero__pausa {
+  opacity: 0;
+  visibility: hidden;
+}
+.tf-hero.en-video .tf-hero__titulo,
+.tf-hero.en-video .tf-hero__texto,
+.tf-hero.en-video .tf-sobre {
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.35);
+}
+@media (max-width: 767px) {
+  /* En pantallas angostas el texto ocupa todo el ancho: velo parejo para mantener el contraste. */
+  .tf-hero::after {
+    background:
+      linear-gradient(0deg, rgb(12 11 8 / 0.78) 0%, rgb(12 11 8 / 0.5) 45%, rgb(12 11 8 / 0.42) 100%);
+  }
+}
+.tf-hero__video {
+  white-space: nowrap;
+}
 .tf-hero__in {
   align-self: center;
   padding-block: 4.5rem 2rem;
@@ -410,7 +449,7 @@ body {
 }
 .tf-hero__indicadores {
   display: flex;
-  gap: 0.5rem;
+  gap: clamp(0rem, -0.5rem + 2.5vw, 0.5rem);
 }
 .tf-hero__indicadores button {
   min-width: 2.75rem;

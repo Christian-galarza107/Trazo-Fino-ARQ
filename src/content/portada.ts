@@ -22,17 +22,19 @@ export const portada: {
   cierre: Medio | null;
 } = {
   /**
-   * Video generado con Gemini Pro (render ilustrativo, no es una obra construida), entregado el 24/11/2026 (848×478, 10 s).
-   * Preparado sin audio, bucle ida y vuelta de 20 s, H.264 + WebM VP9.
-   * Escritorio 848×478 · celular vertical 270×478 (recorte central). Pedir el original en mayor resolución.
+   * Video generado con Gemini Pro (render ilustrativo, no es una obra construida).
+   * Fuente: la copia recibida por WhatsApp el 24/11/2026 (848×478, H.264, 1,6 Mbps, 10 s), elegida por el usuario.
+   * Respaldo sin tocar: docs/medios-originales/portada-video-gemini-via-whatsapp-2026-11-24.mp4
+   * portada.mp4: el MISMO flujo H.264, sin recomprimir (solo sin audio y con faststart).
+   * portada.webm: VP9 crf 18, solo para navegadores sin H.264. Sin filtros, sin bucle ida y vuelta.
+   * En celulares se usa el mismo archivo (sin recorte propio); el navegador lo encuadra con object-fit.
    */
   video: {
-    escritorio: '/media/video/portada-escritorio.mp4',
-    movil: '/media/video/portada-movil.mp4',
-    escritorioWebm: '/media/video/portada-escritorio.webm',
-    movilWebm: '/media/video/portada-movil.webm',
+    escritorio: '/media/video/portada.mp4',
+    movil: null,
+    escritorioWebm: '/media/video/portada.webm',
     posterEscritorio: { archivo: 'portada/poster-escritorio.jpg', alt: altPortada, origen: 'render-ia' },
-    posterMovil: { archivo: 'portada/poster-movil.jpg', alt: altPortada, origen: 'render-ia' },
+    posterMovil: null,
     origen: 'render-ia',
   },
   // Ejemplo: { archivo: 'portada/hero.jpg', alt: { es: '…' }, origen: 'fotografia' }
