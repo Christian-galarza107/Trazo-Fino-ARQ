@@ -1,7 +1,9 @@
 ---
+/** Pie de página (spec §2.9): una franja con logo, navegación, redes y "Volver arriba", y una línea base. */
 import Logo from './Logo.astro';
+import IconoLinea from './IconoLinea.astro';
 import { sitio } from '../config/sitio';
-import { modulos } from '../content/modulos';
+import { home } from '../content/home';
 import { textos, tr, url, whatsapp } from '../lib/i18n';
 import type { Idioma } from '../lib/tipos';
 interface Props { lang: Idioma }
@@ -9,49 +11,35 @@ const { lang } = Astro.props;
 const t = textos(lang);
 const c = sitio.contacto;
 const wa = whatsapp(t.contacto.wa.saludo);
-const redes = Object.entries(sitio.redes).filter(([, v]) => v) as [string, string][];
-const nombreRed: Record<string, string> = { instagram: 'Instagram', facebook: 'Facebook', linkedin: 'LinkedIn', youtube: 'YouTube' };
+// Solo se muestran las redes que tienen enlace cargado en src/config/sitio.ts.
+const redes = (['instagram', 'linkedin', 'youtube'] as const)
+  .map((k) => [k, sitio.redes[k]] as const)
+  .filter((r): r is readonly ['instagram' | 'linkedin' | 'youtube', string] => Boolean(r[1]));
+const nombreRed = { instagram: 'Instagram', linkedin: 'LinkedIn', youtube: 'YouTube' };
 ---
-<footer class="pie">
-  <div class="contenedor">
-    <div class="pie__reticula">
-      <div>
-        <Logo href={url(lang, 'inicio')} />
-        <p class="pie__frase">{t.inicio.hero.titulo}</p>
+<footer class="tf-pie">
+  <div class="tf-contenedor tf-pie__franja">
+    <Logo href={url(lang, 'inicio')} />
+    <nav class="tf-pie__nav" aria-label={t.pie.navegacion}>
+      <a href={url(lang, 'modulos')}>{t.nav.modulos}</a>
+      <a href={url(lang, 'proyectos')}>{t.nav.proyectos}</a>
+      <a href={`${url(lang, 'inicio')}#servicios`}>{tr(home.nav.servicios, lang)}</a>
+      <a href={url(lang, 'estudio')}>{t.nav.estudio}</a>
+      <a href={url(lang, 'contacto')}>{t.nav.contacto}</a>
+    </nav>
+    {redes.length > 0 && (
+      <div class="tf-pie__redes">
+        {redes.map(([k, v]) => <a href={v} target="_blank" rel="noopener" aria-label={nombreRed[k]}><IconoLinea nombre={k} /></a>)}
       </div>
-      <div>
-        <h2>{t.pie.navegacion}</h2>
-        <ul>
-          <li><a href={url(lang, 'modulos')}>{t.nav.modulos}</a></li>
-          {modulos.map((m) => <li><a href={url(lang, 'modulos', m.slug)}>{tr(m.nombre, lang)}</a></li>)}
-          <li><a href={url(lang, 'proyectos')}>{t.nav.proyectos}</a></li>
-          <li><a href={url(lang, 'estudio')}>{t.nav.estudio}</a></li>
-          <li><a href={url(lang, 'contacto')}>{t.nav.contacto}</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2>{t.pie.contacto}</h2>
-        <ul>
-          {wa && <li><a href={wa} target="_blank" rel="noopener">WhatsApp {c.telefonoVisible}</a></li>}
-          {c.email && <li><a href={`mailto:${c.email}`}>{c.email}</a></li>}
-          {c.direccion && <li>{c.direccion}</li>}
-          {c.horario && <li>{c.horario}</li>}
-        </ul>
-        <p class="secundario" style="color:var(--sobre-oscuro-2);margin-top:1.5rem;max-width:20rem">{t.pie.descripcion}</p>
-      </div>
-      {redes.length > 0 && (
-        <div>
-          <h2>{t.pie.redes}</h2>
-          <ul>{redes.map(([k, v]) => <li><a href={v} target="_blank" rel="noopener">{nombreRed[k] ?? k}</a></li>)}</ul>
-        </div>
-      )}
-    </div>
-    <div class="pie__base">
-      <span>© {new Date().getFullYear()} {sitio.marcaCompleta}. {t.pie.derechos}</span>
-      <nav aria-label={t.pie.navegacion}>
-        <a href={url(lang, 'privacidad')}>{t.pie.privacidad}</a>
-        <a href="#arriba">{t.pie.arriba} ↑</a>
-      </nav>
-    </div>
+    )}
+    <a class="tf-pie__arriba" href="#arriba"><IconoLinea nombre="flecha-arriba" />{tr(home.nav.arriba, lang)}</a>
+  </div>
+  <div class="tf-contenedor tf-pie__base">
+    <span>© {new Date().getFullYear()} {sitio.marcaCompleta}. {t.pie.derechos}</span>
+    <span class="tf-pie__contacto">
+      {wa && <a href={wa} target="_blank" rel="noopener">WhatsApp {c.telefonoVisible}</a>}
+      {c.email && <a href={`mailto:${c.email}`}>{c.email}</a>}
+      <a href={url(lang, 'privacidad')}>{t.pie.privacidad}</a>
+    </span>
   </div>
 </footer>

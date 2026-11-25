@@ -1,27 +1,31 @@
 ---
+/**
+ * Home: primera experiencia web de TRAZOFINO (docs/TRAZOFINO_DESIGN_SPEC.md).
+ * Orden definitivo (§3): Header · Hero · Tu hogar · Tres caminos · Catálogo · Proyectos ·
+ * Servicios · Hablemos de tu proyecto · Footer (el header y el footer los pone Base).
+ * Las imágenes sin estado "aprobado" en la biblioteca se muestran con <Provisorio>.
+ */
+import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Medio from '../components/Medio.astro';
-import Titulo from '../components/Titulo.astro';
-import Panorama from '../components/Panorama.astro';
-import Obra from '../components/Obra.astro';
-import Icono from '../components/Icono.astro';
-import VideoPortada from '../components/VideoPortada.astro';
+import IconoLinea from '../components/IconoLinea.astro';
+import Provisorio from '../components/Provisorio.astro';
+import { home, lineas } from '../content/home';
 import { modulos } from '../content/modulos';
 import { portada } from '../content/portada';
-import { imagen } from '../lib/medios';
+import { esVertical, imagen } from '../lib/medios';
 import { proyectosVisibles } from '../lib/proyectos';
-import { alternativas, m2, textos, tr, url, whatsapp } from '../lib/i18n';
+import { alternativas, fmt, m2, textos, tr, url, whatsapp } from '../lib/i18n';
 import type { Idioma } from '../lib/tipos';
-import { Picture } from 'astro:assets';
 
 interface Props { lang: Idioma }
 const { lang } = Astro.props;
 const t = textos(lang);
-const i = t.inicio;
-const obras = proyectosVisibles().slice(0, 4);
-const heroImg = imagen(portada.imagen);
+const h = home;
 const wa = whatsapp(t.contacto.wa.saludo);
-const [mS, mM] = modulos;
+const obras = proyectosVisibles().filter((p) => p.portada);
+const video = portada.video;
+const rotuloVideo = video?.origen === 'render-ia' ? t.aviso.renderIA : video?.origen === 'render' ? t.aviso.render : null;
+const enlacesCaminos = [url(lang, 'modulos'), url(lang, 'proyectos'), '#servicios'];
 const jsonld = [
   {
     '@context': 'https://schema.org',
@@ -31,172 +35,283 @@ const jsonld = [
   },
 ];
 ---
-<Base lang={lang} titulo={t.meta.inicio.titulo} descripcion={t.meta.inicio.descripcion} alternativas={alternativas('inicio')} sobreHero jsonld={jsonld}>
-  <!-- 0. Portada -->
-  <section class="hero" aria-labelledby="hero-titulo">
-    {portada.video ? (
-      <VideoPortada video={portada.video} lang={lang} />
-    ) : heroImg ? (
-      <div class="hero__medio">
-        <Picture src={heroImg} alt={tr(portada.imagen?.alt, lang)} formats={['avif', 'webp']} widths={[800, 1280, 1920, 2560].filter((w) => w <= heroImg.width)} sizes="100vw" loading="eager" fetchpriority="high" />
-      </div>
-    ) : (
-      <Panorama nota={`${t.aviso.imagenPendiente} · Video / fotografía de portada`} />
-    )}
-    <div class="contenedor hero__contenido">
-      <div style="display:grid;gap:1.75rem">
-        <p class="etiqueta" data-revelar>{i.hero.etiqueta}</p>
-        <Titulo nivel={1} texto={i.hero.titulo} class="display hero__titulo" id="hero-titulo" />
-      </div>
-      <div class="hero__texto">
-        <p data-revelar style="--d:4">{i.hero.texto}</p>
-        <div class="botones" data-revelar style="--d:6">
-          <a class="boton boton--claro" href={url(lang, 'modulos')}>{t.cta.explorar} <Icono nombre="flecha" /></a>
-          <a class="boton boton--linea-claro" href={url(lang, 'proyectos')}>{t.cta.proyectos}</a>
+<Base lang={lang} titulo={t.meta.inicio.titulo} descripcion={t.meta.inicio.descripcion} alternativas={alternativas('inicio')} actual="inicio" jsonld={jsonld}>
+  <!-- 2. Hero: Nuevas formas de habitar -->
+  <section class="tf-hero" aria-labelledby="hero-titulo" aria-roledescription="carousel" aria-label={tr(h.hero.carrusel, lang)} data-hero>
+    <div class="tf-hero__diapos">
+      {[1, 2, 3, 4].map((n) => (
+        <div class:list={['tf-hero__diapo', { activa: n === 1 }]} data-diapo role="group" aria-roledescription="slide" aria-label={`${tr(h.hero.diapositiva, lang)} 0${n} / 04`} aria-hidden={n === 1 ? undefined : 'true'}>
+          <Provisorio codigo={`TF-HER-0${n}`} lang={lang} tono="oscuro" />
         </div>
+      ))}
+    </div>
+    <div class="tf-contenedor tf-hero__in">
+      <p class="tf-sobre tf-sobre--claro">{tr(h.hero.etiqueta, lang)}</p>
+      <h1 class="tf-hero__titulo" id="hero-titulo">{tr(h.hero.titulo, lang)}</h1>
+      <p class="tf-hero__texto">{tr(h.hero.texto, lang)}</p>
+      <div class="tf-botones">
+        <a class="tf-btn tf-btn--claro" href={url(lang, 'modulos')}>{tr(h.hero.modulos, lang)}<IconoLinea nombre="flecha" /></a>
+        <a class="tf-btn tf-btn--borde-claro" href={url(lang, 'proyectos')}>{tr(h.hero.proyectos, lang)}<IconoLinea nombre="flecha" /></a>
       </div>
     </div>
-    <span class="hero__bajar" aria-hidden="true">{i.hero.desplazar}</span>
-  </section>
-
-  <!-- 1. Presentación -->
-  <section class="seccion" aria-labelledby="presentacion">
-    <div class="contenedor reticula presentacion">
-      <div class="presentacion__titulo" style="display:grid;gap:1.75rem">
-        <p class="etiqueta" data-revelar>{i.presentacion.etiqueta}</p>
-        <Titulo texto={i.presentacion.titulo} class="titulo-1" id="presentacion" />
+    <div class="tf-contenedor tf-hero__pie">
+      <div class="tf-hero__indicadores" role="group" aria-label={tr(h.hero.carrusel, lang)}>
+        {[1, 2, 3, 4].map((n) => (
+          <button type="button" data-ir={n - 1} aria-label={`${tr(h.hero.diapositiva, lang)} 0${n}`} aria-current={n === 1 ? 'true' : undefined}>0{n}</button>
+        ))}
       </div>
-      <div class="presentacion__texto" data-revelar style="--d:2">
-        <p class="bajada">{i.presentacion.texto}</p>
-        <a class="enlace" href={url(lang, 'estudio')}>{t.nav.estudio} <span class="flecha">→</span></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. Introducción a las viviendas modulares -->
-  <section class="seccion seccion--blanca" aria-labelledby="modular">
-    <div class="contenedor reticula modular">
-      <div class="modular__imagen">
-        <Medio medio={portada.modular} lang={lang} ratio="4x5" rotulo={i.modular.etiqueta} tono="arena" barrido sizes="(min-width: 1024px) 55vw, 100vw" />
-      </div>
-      <div class="modular__texto">
-        <p class="etiqueta" data-revelar>{i.modular.etiqueta}</p>
-        <Titulo texto={i.modular.titulo} class="titulo-2" id="modular" />
-        <p class="bajada" data-revelar>{i.modular.texto}</p>
-      </div>
+      {video && (
+        <button type="button" class="tf-hero__video" data-abrir-video aria-haspopup="dialog">
+          <span class="tf-hero__play"><IconoLinea nombre="play" /></span>{tr(h.hero.video, lang)}
+        </button>
+      )}
     </div>
   </section>
 
-  <!-- 3. Módulos S y M (ancho proporcional a su superficie) -->
-  <section class="seccion" aria-labelledby="modelos">
-    <div class="contenedor">
-      <div class="encabezado">
-        <div style="display:grid;gap:1.5rem">
-          <p class="etiqueta" data-revelar>{i.modelos.etiqueta}</p>
-          <Titulo texto={i.modelos.titulo} class="titulo-1" id="modelos" />
+  {video && (
+    <dialog class="tf-video" data-video-dialogo aria-label={tr(h.hero.video, lang)}>
+      <button type="button" class="tf-video__cerrar" data-cerrar-video aria-label={tr(h.hero.cerrarVideo, lang)}><IconoLinea nombre="cerrar" /></button>
+      <video controls playsinline loop muted preload="none" data-video>
+        {video.escritorioWebm && <source src={video.escritorioWebm} type="video/webm" />}
+        <source src={video.escritorio} type="video/mp4" />
+      </video>
+      {rotuloVideo && <p class="tf-video__rotulo">{rotuloVideo}</p>}
+    </dialog>
+  )}
+
+  <!-- 3. Tu hogar, más cerca -->
+  <section class="tf-hogar" aria-labelledby="hogar-titulo">
+    <div class="tf-hogar__medio">
+      <Provisorio codigo="TF-MOD-M-03" lang={lang} ratio="3 / 2" tono="oscuro" />
+      <dl class="tf-hogar__datos">
+        {modulos.map((m) => (
+          <div><dt>{tr(m.nombre, lang)}</dt><dd>{m.superficie} m<sup>2</sup></dd></div>
+        ))}
+      </dl>
+    </div>
+    <div class="tf-contenedor tf-hogar__in">
+      <div class="tf-hogar__texto" data-revelar>
+        <p class="tf-sobre">{tr(h.hogar.etiqueta, lang)}</p>
+        <h2 class="tf-titulo" id="hogar-titulo">{lineas(h.hogar.titulo, lang).map((l) => <span class="tf-linea">{l}</span>)}</h2>
+        <p class="tf-cuerpo">{tr(h.hogar.texto, lang)}</p>
+        <a class="tf-btn tf-btn--bronce" href={url(lang, 'modulos')}>{tr(h.hogar.boton, lang)}<IconoLinea nombre="flecha" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Tres caminos. Una misma visión -->
+  <section class="tf-seccion tf-seccion--claro" aria-labelledby="caminos-titulo">
+    <div class="tf-contenedor">
+      <header class="tf-encabezado" data-revelar>
+        <div>
+          <p class="tf-sobre">{tr(h.caminos.etiqueta, lang)}</p>
+          <h2 class="tf-titulo" id="caminos-titulo">{tr(h.caminos.titulo, lang)}</h2>
         </div>
-        <p class="bajada" data-revelar style="--d:2">{i.modelos.texto}</p>
-      </div>
-      <div class="duo">
-        {[mS, mM].map((m, n) => (
-          <article class="pieza" data-revelar style={`--d:${n}`}>
-            <a class="pieza__medio" href={url(lang, 'modulos', m.slug)} aria-hidden="true" tabindex="-1">
-              <Medio medio={m.medios.portada} lang={lang} ratio={n === 0 ? '4x5' : '3x2'} rotulo={`${tr(m.nombre, lang)} · ${t.ficha.exterior}`} tono={n === 0 ? 'arena' : 'piedra'} sizes={n === 0 ? '(min-width: 1024px) 33vw, 100vw' : '(min-width: 1024px) 66vw, 100vw'} />
-            </a>
-            <div class="pieza__datos">
-              <h3 class="pieza__nombre"><a href={url(lang, 'modulos', m.slug)}>{tr(m.nombre, lang)}</a></h3>
-              <span class="pieza__m2">{m2(m.superficie, lang)}</span>
-              <p class="pieza__cat">{tr(m.categoria, lang)}</p>
-              <div class="pieza__acciones">
-                <a class="enlace" href={url(lang, 'modulos', m.slug)}>{t.cta.verModulo} <span class="flecha">→</span></a>
-                <a class="enlace" href={`${url(lang, 'modulos', m.slug)}#consulta`}>{t.cta.cotizar}</a>
-              </div>
+        <p class="tf-encabezado__texto">{tr(h.caminos.texto, lang)}</p>
+      </header>
+      <div class="tf-caminos">
+        {h.caminos.items.map((c, n) => (
+          <article class="tf-tarjeta tf-camino" data-revelar style={`--d:${n}`}>
+            <Provisorio codigo={c.codigo} lang={lang} ratio="8 / 3" class="tf-tarjeta__medio" />
+            <div class="tf-tarjeta__cuerpo">
+              <span class="tf-numero">0{n + 1}</span>
+              <h3 class="tf-tarjeta__titulo">{tr(c.titulo, lang)}</h3>
+              <p class="tf-tarjeta__texto">{tr(c.texto, lang)}</p>
+              <a class="tf-enlace" href={enlacesCaminos[n]}>{tr(c.enlace, lang)}<IconoLinea nombre="flecha" /></a>
             </div>
           </article>
         ))}
       </div>
-      <div style="margin-top:clamp(3rem,2rem + 3vw,5rem)" data-revelar>
-        <a class="boton boton--linea" href={`${url(lang, 'modulos')}#comparar`}>{t.cta.comparar}</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Ventajas del enfoque -->
-  <section class="seccion seccion--oscura" aria-labelledby="ventajas">
-    <div class="contenedor">
-      <div class="encabezado">
-        <div style="display:grid;gap:1.5rem">
-          <p class="etiqueta" data-revelar>{i.ventajas.etiqueta}</p>
-          <Titulo texto={i.ventajas.titulo} class="titulo-1" id="ventajas" />
-        </div>
-      </div>
-      <div class="ventajas">
-        {i.ventajas.items.map((v, n) => (
-          <div class="ventaja" data-revelar style={`--d:${n}`}>
-            <span class="ventaja__n">0{n + 1}</span>
-            <h3>{v.titulo}</h3>
-            <p class="secundario">{v.texto}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. Trabajos del estudio -->
-  <section class="seccion" aria-labelledby="obras">
-    <div class="contenedor">
-      <div class="encabezado">
-        <div style="display:grid;gap:1.5rem">
-          <p class="etiqueta" data-revelar>{i.estudio.etiqueta}</p>
-          <Titulo texto={i.estudio.titulo} class="titulo-1" id="obras" />
-        </div>
-        <p class="bajada" data-revelar style="--d:2">{i.estudio.texto}</p>
-      </div>
-      {obras.length ? (
-        <div class="mosaico">{obras.map((p, n) => <Obra proyecto={p} lang={lang} ratio={n % 2 ? '4x5' : '3x2'} demora={n % 2} />)}</div>
-      ) : (
-        <div class="vacio" data-revelar>
-          <h3>{t.proyectos.vacioTitulo}</h3>
-          <p>{t.proyectos.vacioTexto}</p>
-          <a class="enlace" href={url(lang, 'contacto')}>{t.nav.contacto} <span class="flecha">→</span></a>
-        </div>
-      )}
-      {obras.length > 0 && <div style="margin-top:4rem"><a class="boton boton--linea" href={url(lang, 'proyectos')}>{t.cta.proyectos}</a></div>}
-    </div>
-  </section>
-
-  <!-- 6. Proceso comercial -->
-  <section class="seccion seccion--arena" aria-labelledby="proceso">
-    <div class="contenedor">
-      <div class="encabezado">
-        <div style="display:grid;gap:1.5rem">
-          <p class="etiqueta" data-revelar>{i.proceso.etiqueta}</p>
-          <Titulo texto={i.proceso.titulo} class="titulo-1" id="proceso" />
-        </div>
-      </div>
-      <ol class="pasos">
-        {i.proceso.pasos.map((p, n) => (
-          <li class="paso" data-revelar style={`--d:${n % 2}`}>
-            <span class="paso__n">0{n + 1}</span>
-            <h3>{p.titulo}</h3>
-            <p>{p.texto}</p>
+      <ul class="tf-atributos" data-revelar>
+        {h.caminos.atributos.map((a) => (
+          <li>
+            <IconoLinea nombre={a.icono as 'plano'} class="tf-icono" />
+            <div><strong>{tr(a.titulo, lang)}</strong><span>{tr(a.texto, lang)}</span></div>
           </li>
         ))}
-      </ol>
+      </ul>
+      <p class="tf-nota">{tr(h.caminos.nota, lang)}</p>
     </div>
   </section>
 
-  <!-- 7. Llamado final -->
-  <section class="seccion seccion--oscura" aria-labelledby="cierre">
-    <div class="contenedor cierre">
-      <Titulo texto={i.final.titulo} class="display" id="cierre" />
-      <div style="display:grid;gap:1.75rem;--d:3" data-revelar>
-        <p class="bajada">{i.final.texto}</p>
-        <div class="botones">
-          <a class="boton boton--claro" href={url(lang, 'contacto')}>{t.cta.cotizar}</a>
-          {wa && <a class="boton boton--linea-claro" href={wa} target="_blank" rel="noopener"><Icono nombre="whatsapp" /> {t.cta.whatsapp}</a>}
+  <!-- 5. Catálogo: Diseño que se adapta a tu vida -->
+  <section class="tf-seccion" aria-labelledby="catalogo-titulo">
+    <div class="tf-contenedor">
+      <header class="tf-encabezado" data-revelar>
+        <div>
+          <p class="tf-sobre">{tr(h.catalogo.etiqueta, lang)}</p>
+          <h2 class="tf-titulo" id="catalogo-titulo">{lineas(h.catalogo.titulo, lang).map((l) => <span class="tf-linea">{l}</span>)}</h2>
         </div>
+        <p class="tf-encabezado__texto">{tr(h.catalogo.texto, lang)}</p>
+      </header>
+      <div class="tf-catalogo">
+        {modulos.map((m, n) => (
+          <article class="tf-tarjeta tf-modulo" data-revelar style={`--d:${n}`}>
+            <Provisorio codigo={`TF-MOD-${m.codigo}-01`} lang={lang} ratio="3 / 2" class="tf-tarjeta__medio" />
+            <div class="tf-tarjeta__cuerpo">
+              <h3 class="tf-modulo__nombre">{tr(m.nombre, lang)}</h3>
+              <p class="tf-modulo__m2">{m.superficie} m<sup>2</sup></p>
+              <ul class="tf-modulo__lista">
+                {h.catalogo.items.map((it) => (
+                  <li><IconoLinea nombre={it.icono as 'plano'} class="tf-icono" />{fmt(tr(it.texto, lang), { m2: m2(m.superficie, lang) })}</li>
+                ))}
+              </ul>
+              <a class="tf-btn tf-btn--borde" href={url(lang, 'modulos', m.slug)}>{tr(h.catalogo.detalles, lang)}<IconoLinea nombre="flecha" /></a>
+            </div>
+          </article>
+        ))}
+        <aside class="tf-tarjeta tf-crecimiento" data-revelar style="--d:2" aria-labelledby="crecimiento-titulo">
+          <h3 class="tf-crecimiento__titulo" id="crecimiento-titulo">{lineas(h.catalogo.crecimiento.titulo, lang).map((l) => <span class="tf-linea">{l}</span>)}</h3>
+          <ul>
+            {h.catalogo.crecimiento.items.map((it) => (
+              <li><Provisorio codigo={it.codigo} lang={lang} ratio="3 / 1" class="tf-crecimiento__esquema" /><span>{tr(it.texto, lang)}</span></li>
+            ))}
+          </ul>
+          <p class="tf-nota">{tr(h.catalogo.crecimiento.nota, lang)}</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Proyectos realizados -->
+  <section class="tf-seccion" aria-labelledby="proyectos-titulo">
+    <div class="tf-contenedor">
+      <header class="tf-encabezado tf-encabezado--enlace" data-revelar>
+        <div>
+          <p class="tf-sobre">{tr(h.proyectos.etiqueta, lang)}</p>
+          <h2 class="tf-titulo" id="proyectos-titulo">{tr(h.proyectos.titulo, lang)}</h2>
+        </div>
+        <a class="tf-enlace tf-enlace--fino" href={url(lang, 'proyectos')}>{tr(h.proyectos.todos, lang)}<IconoLinea nombre="flecha" /></a>
+      </header>
+      <div class="tf-carrusel" data-carrusel>
+        <button type="button" class="tf-carrusel__flecha tf-carrusel__flecha--izq" data-mover="-1" aria-label={tr(h.proyectos.anterior, lang)}><IconoLinea nombre="flecha-izq" /></button>
+        <ul class="tf-carrusel__pista" data-pista tabindex="0" aria-label={tr(h.proyectos.titulo, lang)}>
+          {obras.map((p) => {
+            const img = imagen(p.portada)!;
+            const vertical = esVertical(p.portada);
+            return (
+              <li class="tf-obra">
+                <a href={url(lang, 'proyectos', p.slug)}>
+                  <span class:list={['tf-obra__medio', { 'tf-obra__medio--vertical': vertical }]}>
+                    <Picture src={img} alt={tr(p.portada!.alt, lang)} formats={['avif', 'webp']} widths={[480, 800, 1200].filter((w) => w <= img.width)} sizes="(min-width: 1024px) 400px, (min-width: 768px) 46vw, 85vw" loading="lazy" decoding="async" />
+                  </span>
+                  <strong>{tr(p.titulo, lang)}</strong>
+                  <span>{p.ubicacion ?? tr(p.categoria, lang)}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <button type="button" class="tf-carrusel__flecha tf-carrusel__flecha--der" data-mover="1" aria-label={tr(h.proyectos.siguiente, lang)}><IconoLinea nombre="flecha" /></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Servicios profesionales y gestiones -->
+  <section class="tf-seccion" id="servicios" aria-labelledby="servicios-titulo">
+    <div class="tf-contenedor">
+      <header class="tf-encabezado" data-revelar>
+        <div>
+          <p class="tf-sobre">{tr(h.servicios.etiqueta, lang)}</p>
+          <h2 class="tf-titulo" id="servicios-titulo">{lineas(h.servicios.titulo, lang).map((l) => <span class="tf-linea">{l}</span>)}</h2>
+        </div>
+        <p class="tf-encabezado__texto">{tr(h.servicios.texto, lang)}</p>
+      </header>
+      <div class="tf-servicios">
+        {h.servicios.items.map((s, n) => (
+          <article class="tf-tarjeta tf-servicio" data-revelar style={`--d:${n}`}>
+            <IconoLinea nombre={s.icono as 'plano'} class="tf-servicio__icono" />
+            <h3 class="tf-tarjeta__titulo">{tr(s.titulo, lang)}</h3>
+            <p class="tf-tarjeta__texto">{tr(s.texto, lang)}</p>
+          </article>
+        ))}
+      </div>
+      <div class="tf-servicios__pie">
+        <a class="tf-btn tf-btn--bronce" href={url(lang, 'contacto')}>{tr(h.servicios.boton, lang)}<IconoLinea nombre="flecha" /></a>
+        <a class="tf-enlace tf-enlace--fino" href={url(lang, 'contacto')}>{tr(h.servicios.factibilidad, lang)}<IconoLinea nombre="flecha" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Hablemos de tu proyecto -->
+  <section class="tf-cierre" aria-labelledby="cierre-titulo">
+    <Provisorio codigo="TF-CIE-01" lang={lang} tono="oscuro" class="tf-cierre__fondo" />
+    <div class="tf-contenedor tf-cierre__in" data-revelar>
+      <h2 class="tf-cierre__titulo" id="cierre-titulo">{tr(h.cierre.titulo, lang)}</h2>
+      <p>{tr(h.cierre.texto, lang)}</p>
+      <div class="tf-botones">
+        <a class="tf-btn tf-btn--bronce" href={url(lang, 'contacto')}>{tr(home.nav.asesoria, lang)}</a>
+        {wa && <a class="tf-btn tf-btn--borde-claro" href={wa} target="_blank" rel="noopener"><IconoLinea nombre="whatsapp" />{tr(h.cierre.whatsapp, lang)}</a>}
       </div>
     </div>
   </section>
 </Base>
+
+<script>
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Hero: carrusel de 4 diapositivas (fundido cada 7 s; pausa con mouse, foco, fuera de pantalla y movimiento reducido).
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (hero) {
+    const diapos = [...hero.querySelectorAll<HTMLElement>('[data-diapo]')];
+    const botones = [...hero.querySelectorAll<HTMLButtonElement>('[data-ir]')];
+    let actual = 0;
+    let timer = 0;
+    let visible = true;
+    let pausado = false;
+    const ir = (n: number) => {
+      actual = (n + diapos.length) % diapos.length;
+      diapos.forEach((d, i) => {
+        d.classList.toggle('activa', i === actual);
+        d.toggleAttribute('aria-hidden', i !== actual);
+      });
+      botones.forEach((b, i) => (i === actual ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
+    };
+    const programar = () => {
+      clearInterval(timer);
+      if (!reducido.matches && visible && !pausado) timer = window.setInterval(() => ir(actual + 1), 7000);
+    };
+    botones.forEach((b, i) => b.addEventListener('click', () => { ir(i); programar(); }));
+    hero.addEventListener('mouseenter', () => { pausado = true; programar(); });
+    hero.addEventListener('mouseleave', () => { pausado = false; programar(); });
+    hero.addEventListener('focusin', () => { pausado = true; programar(); });
+    hero.addEventListener('focusout', () => { pausado = false; programar(); });
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; programar(); }).observe(hero);
+    reducido.addEventListener('change', programar);
+    programar();
+  }
+
+  // "Ver video": diálogo modal accesible (Esc cierra; el foco vuelve al botón).
+  const dialogo = document.querySelector<HTMLDialogElement>('[data-video-dialogo]');
+  const abrir = document.querySelector<HTMLButtonElement>('[data-abrir-video]');
+  if (dialogo && abrir) {
+    const video = dialogo.querySelector<HTMLVideoElement>('[data-video]')!;
+    abrir.addEventListener('click', () => {
+      dialogo.showModal();
+      video.play().catch(() => {});
+    });
+    dialogo.querySelector('[data-cerrar-video]')!.addEventListener('click', () => dialogo.close());
+    dialogo.addEventListener('click', (e) => e.target === dialogo && dialogo.close());
+    dialogo.addEventListener('close', () => { video.pause(); abrir.focus(); });
+  }
+
+  // Carrusel de proyectos: scroll-snap con flechas y teclado.
+  document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((c) => {
+    const pista = c.querySelector<HTMLElement>('[data-pista]')!;
+    const paso = () => (pista.querySelector('li')?.getBoundingClientRect().width ?? 300) + 24;
+    const mover = (dir: number) => pista.scrollBy({ left: dir * paso(), behavior: reducido.matches ? 'auto' : 'smooth' });
+    c.querySelectorAll<HTMLButtonElement>('[data-mover]').forEach((b) => b.addEventListener('click', () => mover(Number(b.dataset.mover))));
+    pista.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); mover(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); mover(-1); }
+    });
+    const estado = () => {
+      const fin = pista.scrollWidth - pista.clientWidth - 2;
+      c.querySelector<HTMLButtonElement>('[data-mover="-1"]')!.disabled = pista.scrollLeft <= 2;
+      c.querySelector<HTMLButtonElement>('[data-mover="1"]')!.disabled = pista.scrollLeft >= fin;
+    };
+    pista.addEventListener('scroll', estado, { passive: true });
+    addEventListener('resize', estado);
+    estado();
+  });
+</script>

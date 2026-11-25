@@ -1,0 +1,32 @@
+---
+/**
+ * Marcador visual provisorio para una imagen de la biblioteca que todavía no está aprobada
+ * (docs/TRAZOFINO_MEDIA_LIBRARY.md). Mantiene la proporción exacta del recurso definitivo
+ * y muestra su código para que la auditoría visual sepa qué falta. No simula ninguna obra.
+ */
+import { home } from '../content/home';
+import { tr } from '../lib/i18n';
+import type { Idioma } from '../lib/tipos';
+interface Props {
+  codigo: string;
+  lang: Idioma;
+  /** Proporción CSS, p. ej. "16 / 9". Si se omite, ocupa el contenedor. */
+  ratio?: string;
+  tono?: 'claro' | 'oscuro';
+  /** Oculta el rótulo (por ejemplo, cuando hay texto encima). */
+  sinRotulo?: boolean;
+  class?: string;
+}
+const { codigo, lang, ratio, tono = 'claro', sinRotulo = false, class: cls } = Astro.props;
+---
+<div
+  class:list={['tf-ph', `tf-ph--${tono}`, cls]}
+  style={ratio ? `aspect-ratio:${ratio}` : undefined}
+  role="img"
+  aria-label={`${tr(home.pendiente, lang)}: ${codigo}`}
+  data-codigo={codigo}
+>
+  {!sinRotulo && (
+    <span class="tf-ph__rotulo" aria-hidden="true"><span>{codigo}</span><em>{tr(home.pendiente, lang)}</em></span>
+  )}
+</div>

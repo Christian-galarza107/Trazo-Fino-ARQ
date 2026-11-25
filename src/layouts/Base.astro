@@ -1,12 +1,13 @@
 ---
 import '../styles/global.css';
+import '../styles/experiencia.css';
 import Header from '../components/Header.astro';
 import Pie from '../components/Pie.astro';
 import BarraMovil from '../components/BarraMovil.astro';
 import { sitio } from '../config/sitio';
 import { IDIOMAS, LOCALE, textos, type Ruta } from '../lib/i18n';
 import type { Idioma } from '../lib/tipos';
-import fuenteTitulos from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2?url';
+import fuenteTitulos from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff2?url';
 import fuenteTexto from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
 
 interface Props {
@@ -66,7 +67,7 @@ const organizacion = {
     <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#f3efe7" />
+    <meta name="theme-color" content="#f8f3e9" />
     <meta name="format-detection" content="telephone=no" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={sitio.marcaCompleta} />
